@@ -1,0 +1,36 @@
+@import "tailwindcss";
+
+:root {
+  --font-sans: var(--font-geist-sans), Inter, sans-serif;
+  --color-red: #ef4444;
+  --color-text: #ffffff;
+  --color-bg: #000000;
+}
+
+body {
+  font-family: var(--font-sans);
+  background-color: var(--color-bg);
+  color: var(--color-text);
+}
+
+.bg-glitch {
+  background-image: url('/img/glitch-texture.png');
+  background-size: cover;
+  background-repeat: repeat;
+  opacity: 0.25;
+  mix-blend-mode: screen;
+  filter: brightness(1.5) contrast(1.2);
+}
+
+@keyframes glitchScroll {
+  0% {
+    transform: translateY(0%);
+  }
+  100% {
+    transform: translateY(-100%);
+  }
+}
+
+.animate-glitch {
+  animation: glitchScroll 20s linear infinite;
+}
