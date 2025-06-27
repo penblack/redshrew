@@ -12,6 +12,22 @@ export default function Home() {
         />
       </div>
 
+     {/*
+  Left-Side Glitch Overlay
+
+  <div className="absolute top-0 right-0 w-1/2 h-full z-0 overflow-hidden pointer-events-none">
+    <img
+      src="/hover_red_glitch.gif"
+      alt="Glitch Overlay Left"
+      className="w-full h-full object-cover opacity-30 mix-blend-screen"
+    />
+  </div>
+*/}
+
+
+
+
+
       {/* Static Grid Background — optional, can remove */}
       <div
         className="absolute right-0 top-0 w-1/2 h-full bg-[radial-gradient(circle,_rgba(255,0,0,0.15)_1px,_transparent_1px)] bg-[length:4px_4px] opacity-20 pointer-events-none z-0"
@@ -20,7 +36,7 @@ export default function Home() {
 
       {/* Hero Section */}
       <section className="absolute top-[4vh] left-0 z-10 max-w-6xl pl-8 sm:pl-16 lg:pl-24">
-        <h1 className="text-[96px] sm:text-[108px] lg:text-[120px] font-extrabold leading-[1.1] tracking-tight mb-14">
+        <h1 className="text-[96px] sm:text-[108px] lg:text-[128px] font-semibold leading-[1.05] tracking-tight mb-14 text-neutral-100">
           Deception<br />is defense.
         </h1>
 
@@ -30,11 +46,11 @@ export default function Home() {
         </p>
 
         <a
-          href="#"
-          className="inline-block border border-red-500 text-red-500 px-10 py-5 rounded hover:bg-red-500 hover:text-black font-semibold transition text-xl"
-        >
-          See PhantomKey in Action
-        </a>
+  href="#"
+  className="inline-block border-2 border-red-500 text-red-500 px-12 py-5 rounded-md hover:bg-red-500 hover:text-black font-semibold transition text-2xl tracking-wide"
+>
+  See PhantomKey in Action
+</a>
       </section>
     </main>
   );
