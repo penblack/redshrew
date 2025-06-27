@@ -2,7 +2,7 @@ import Image from "next/image";
 
 export default function Home() {
   return (
-    <main className="relative flex min-h-screen flex-col bg-black text-white px-6 py-20 overflow-hidden font-sans">
+    <main className="relative min-h-screen bg-black text-white px-6 py-0 overflow-hidden font-sans">
       {/* Red Glitch Background GIF */}
       <div className="absolute right-0 top-0 w-1/2 h-full z-0 overflow-hidden pointer-events-none">
         <img
@@ -19,7 +19,7 @@ export default function Home() {
       />
 
       {/* Hero Section */}
-      <section className="relative z-10 max-w-6xl pl-8 sm:pl-16 lg:pl-24 pt-20">
+      <section className="absolute top-[4vh] left-0 z-10 max-w-6xl pl-8 sm:pl-16 lg:pl-24">
         <h1 className="text-[96px] sm:text-[108px] lg:text-[120px] font-extrabold leading-[1.1] tracking-tight mb-14">
           Deception<br />is defense.
         </h1>

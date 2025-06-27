@@ -20,7 +20,7 @@ export default function RootLayout({
       <body className={`${inter.className} antialiased font-sans`}> 
         <header className="w-full px-16 py-12 flex justify-between items-center text-xl">
   <div className="flex items-center gap-6 leading-none">
-    <img src="/logo.png" alt="RedShrew Logo" className="h-40 w-30" />
+    <img src="/logo.png" alt="RedShrew Logo" className="h-40 w-auto" />
     <span className="text-5xl font-extrabold text-red-500 tracking-widest">REDSHREW</span>
   </div>
   <nav className="flex gap-14 text-xl font-semibold text-red-500">
