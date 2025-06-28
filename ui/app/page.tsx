@@ -46,7 +46,7 @@ export default function Home() {
         </p>
 
         <a
-  href="#"
+  href="/demo"
   className="inline-block border-2 border-red-500 text-red-500 px-12 py-5 rounded-md hover:bg-red-500 hover:text-black font-semibold transition text-2xl tracking-wide"
 >
   See PhantomKey in Action
