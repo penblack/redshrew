@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import ShrewRunner from '@/components/shrewrunner';
+//import ShrewRunner from '@/components/shrewrunner';
 
 export default function EasterEggPage() {
   return (

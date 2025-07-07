@@ -1,6 +1,6 @@
 'use client';
 
-import { EyeOff } from 'lucide-react';
+//import { EyeOff } from 'lucide-react';
 
 export default function WhyRedShrewBlog() {
   return (
