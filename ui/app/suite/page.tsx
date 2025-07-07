@@ -1,29 +1,212 @@
-"use client";
+'use client';
 
-import { useState } from "react";
+import { useEffect, useState } from 'react';
+import { ShieldAlert, TerminalSquare, Eye, Cloud, Settings } from 'lucide-react';
 
-export default function SuitePage() {
-  const [hasError, setHasError] = useState(false);
+type PhantomStatus = {
+  status?: string;
+  generated?: string[];
+  error?: string;
+} | null;
+
+type HoneyPitchStatus = {
+  status?: string;
+  generated?: string[];
+  error?: string;
+} | null;
+
+type EventLog = {
+  timestamp: string;
+  tool: string;
+  action: string;
+  status: string;
+  metadata?: Record<string, any>;
+};
+
+type SystemStatus = {
+  phantomkey: boolean;
+  honeypitch: boolean;
+  event_log_count: number;
+  system_health: string;
+  config_loaded: boolean;
+} | null;
+
+export default function CommandCenter() {
+  const [activeTab, setActiveTab] = useState('dashboard');
+  const [phantomStatus, setPhantomStatus] = useState<PhantomStatus>(null);
+  const [honeypitchStatus, setHoneyPitchStatus] = useState<HoneyPitchStatus>(null);
+  const [eventLogs, setEventLogs] = useState<EventLog[]>([]);
+  const [systemStatus, setSystemStatus] = useState<SystemStatus>(null);
+
+  async function handlePhantomKeyStart() {
+    try {
+      const response = await fetch('/api/phantomkey/start', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ fake_skeleton: ['API_KEY_XYZ', 'TOKEN_ABC'] }),
+      });
+      const data = await response.json();
+      setPhantomStatus(data);
+    } catch (error) {
+      console.error('Error calling PhantomKey:', error);
+      setPhantomStatus({ error: 'Failed to connect to backend' });
+    }
+  }
+
+  async function handleHoneyPitchStart() {
+    try {
+      const response = await fetch('/api/honeypitch/start', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+      });
+      const data = await response.json();
+      setHoneyPitchStatus(data);
+    } catch (error) {
+      console.error('Error calling HoneyPitch:', error);
+      setHoneyPitchStatus({ error: 'Failed to connect to backend' });
+    }
+  }
+
+  useEffect(() => {
+    if (activeTab === 'dashboard') {
+      fetch('/api/status')
+        .then((res) => res.json())
+        .then((data) => setSystemStatus(data))
+        .catch(() => setSystemStatus(null));
+    } else if (activeTab === 'events') {
+      fetch('/api/observer/logs')
+        .then((res) => res.json())
+        .then((data) => setEventLogs(data))
+        .catch(() =>
+          setEventLogs([{ timestamp: '', tool: '', action: '', status: 'Failed to fetch logs' }])
+        );
+    }
+  }, [activeTab]);
 
   return (
-    <main className="min-h-screen bg-black text-white px-6 py-20 flex justify-center items-center">
-      {hasError ? (
-        <div className="text-center space-y-4">
-          <h1 className="text-4xl font-bold text-red-500">Suite Unavailable</h1>
-          <p className="text-lg text-gray-300">
-            The RedShrew Suite is currently undergoing maintenance or is
-            temporarily unreachable.
-          </p>
-          <p className="text-sm text-gray-500">Please check back later.</p>
-        </div>
-      ) : (
-        <iframe
-          src="https://suite.redshrew.com" // change to your hosted suite URL
-          className="w-full h-screen border-none"
-          onError={() => setHasError(true)}
-          title="RedShrew Suite"
-        />
-      )}
+    <main className="min-h-screen bg-black text-white font-sans p-6">
+      {/* Header */}
+      <header className="flex items-center justify-between border-b border-red-600 pb-4 mb-6">
+        <h1 className="text-3xl font-bold text-red-500">RedShrew Command Center</h1>
+        <span className="text-sm text-gray-400">v0.1.0</span>
+      </header>
+
+      {/* Navigation */}
+      <nav className="flex space-x-4 mb-8">
+        {([
+          ['dashboard', ShieldAlert, 'Dashboard'],
+          ['tools', TerminalSquare, 'Tools'],
+          ['events', Eye, 'Event Log'],
+          ['cloud', Cloud, 'Cloud Sync'],
+          ['settings', Settings, 'Settings'],
+        ] as [string, React.ElementType, string][]).map(([tab, Icon, label]) => (
+          <button
+            key={tab}
+            onClick={() => setActiveTab(tab)}
+            className={tabClass(activeTab, tab)}
+          >
+            <div className="flex items-center space-x-2">
+              <Icon className="w-4 h-4" />
+              <span>{label}</span>
+            </div>
+          </button>
+        ))}
+      </nav>
+
+      {/* Content Area */}
+      <section className="bg-zinc-900 rounded-xl p-6 shadow-md">
+        {activeTab === 'dashboard' && (
+          <div className="space-y-4">
+            <h2 className="text-xl font-bold text-red-400">System Overview</h2>
+            {systemStatus ? (
+              <ul className="text-sm space-y-2">
+                <li>🛡️ PhantomKey: {systemStatus.phantomkey ? 'Active' : 'Inactive'}</li>
+                <li>🧪 HoneyPitch: {systemStatus.honeypitch ? 'Active' : 'Inactive'}</li>
+                <li>📜 Event Logs: {systemStatus.event_log_count}</li>
+                <li>🟢 System Health: {systemStatus.system_health}</li>
+                <li>⚙️ Config Loaded: {systemStatus.config_loaded ? 'Yes' : 'No'}</li>
+              </ul>
+            ) : (
+              <p className="text-gray-500">Loading system status...</p>
+            )}
+          </div>
+        )}
+
+        {activeTab === 'tools' && (
+          <div className="space-y-10">
+            {/* PhantomKey */}
+            <div className="space-y-4">
+              <h2 className="text-xl font-bold text-red-400">PhantomKey</h2>
+              <p className="text-sm text-gray-400">Generate decoy skeletons to catch intruders.</p>
+              <button
+                onClick={handlePhantomKeyStart}
+                className="bg-red-600 hover:bg-red-700 px-4 py-2 rounded-lg text-sm font-semibold shadow"
+              >
+                Start PhantomKey
+              </button>
+              {phantomStatus && (
+                <pre className="bg-zinc-800 p-4 rounded text-sm text-green-400 mt-4">
+                  {JSON.stringify(phantomStatus, null, 2)}
+                </pre>
+              )}
+            </div>
+
+            {/* HoneyPitch */}
+            <div className="space-y-4">
+              <h2 className="text-xl font-bold text-red-400">HoneyPitch</h2>
+              <p className="text-sm text-gray-400">Deploy fake files or services to catch intruders.</p>
+              <button
+                onClick={handleHoneyPitchStart}
+                className="bg-red-600 hover:bg-red-700 px-4 py-2 rounded-lg text-sm font-semibold shadow"
+              >
+                Start HoneyPitch
+              </button>
+              {honeypitchStatus && (
+                <pre className="bg-zinc-800 p-4 rounded text-sm text-green-400 mt-4">
+                  {JSON.stringify(honeypitchStatus, null, 2)}
+                </pre>
+              )}
+            </div>
+          </div>
+        )}
+
+        {/* Event Logs */}
+        {activeTab === 'events' && (
+          <div className="space-y-4">
+            <h2 className="text-xl font-bold text-red-400">Event Logs</h2>
+            {eventLogs.length === 0 ? (
+              <p className="text-sm text-gray-500">No logs found.</p>
+            ) : (
+              <ul className="text-sm space-y-2">
+                {eventLogs.map((log, idx) => (
+                  <li key={log.timestamp || idx} className="bg-zinc-800 p-3 rounded shadow">
+                    <p><strong>{log.timestamp}</strong></p>
+                    <p>🛠️ Tool: {log.tool}</p>
+                    <p>📋 Action: {log.action}</p>
+                    <p>✅ Status: {log.status}</p>
+                    {log.metadata && Object.keys(log.metadata).length > 0 && (
+                      <pre className="bg-black text-green-400 p-2 rounded mt-2">
+                        {JSON.stringify(log.metadata, null, 2)}
+                      </pre>
+                    )}
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+        )}
+
+        {activeTab === 'cloud' && <div>☁️ Cloud Connection Status and API Key Management</div>}
+        {activeTab === 'settings' && <div>⚙️ Local Preferences and Config File Editor</div>}
+      </section>
     </main>
   );
+}
+
+function tabClass(active: string, name: string) {
+  return `flex items-center space-x-1 px-4 py-2 rounded-lg text-sm font-medium transition ${
+    active === name
+      ? 'bg-red-600 text-white shadow-lg'
+      : 'text-gray-300 hover:bg-zinc-800 hover:text-white'
+  }`;
 }
