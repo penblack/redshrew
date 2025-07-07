@@ -27,8 +27,10 @@ export default function RootLayout({
           <nav className="flex gap-14 text-xl font-semibold text-red-500">
             <a href="/solutions" className="hover:text-white transition-colors duration-200">Solutions</a>
             <a href="/playbook" className="hover:text-white transition-colors duration-200">Playbook</a>
+            <a href="/suite" className="hover:text-white transition-colors duration-200">Suite</a>
             <a href="/blog" className="hover:text-white transition-colors duration-200">Blog</a>
             <a href="/contact" className="hover:text-white transition-colors duration-200">Contact</a>
+            
           </nav>
         </header>
 

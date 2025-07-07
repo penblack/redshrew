@@ -40,7 +40,7 @@ export default function PhantomKeyDemo() {
             >
               <animate
                 attributeName="baseFrequency"
-                dur="80s"
+                dur="45s"
                 values="0.008;0.009;0.008"
                 repeatCount="indefinite"
               />

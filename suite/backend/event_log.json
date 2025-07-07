@@ -1,0 +1,70 @@
+[
+  {
+    "timestamp": "2025-06-30T01:04:28.159359Z",
+    "tool": "HoneyPitch",
+    "action": "deploy",
+    "status": "success",
+    "metadata": {
+      "traps": [
+        "fake.docx",
+        "canary-url.com"
+      ]
+    }
+  },
+  {
+    "timestamp": "2025-07-01T17:40:25.359113Z",
+    "tool": "phantomkey",
+    "action": "generate_skeletons",
+    "status": "success",
+    "metadata": {
+      "skeletons": [
+        "aws",
+        "github",
+        "stripe",
+        "ssh"
+      ]
+    }
+  },
+  {
+    "timestamp": "2025-07-01T17:43:40.519959Z",
+    "tool": "phantomkey",
+    "action": "generate_skeletons",
+    "status": "success",
+    "metadata": {
+      "skeletons": [
+        "aws",
+        "github",
+        "stripe",
+        "ssh"
+      ]
+    }
+  },
+  {
+    "timestamp": "2025-07-01T17:43:54.458863Z",
+    "tool": "phantomkey",
+    "action": "generate_skeletons",
+    "status": "success",
+    "metadata": {
+      "skeletons": [
+        "aws",
+        "github",
+        "stripe",
+        "ssh"
+      ]
+    }
+  },
+  {
+    "timestamp": "2025-07-01T17:45:17.843509Z",
+    "tool": "phantomkey",
+    "action": "generate_skeletons",
+    "status": "success",
+    "metadata": {
+      "skeletons": [
+        "aws",
+        "github",
+        "stripe",
+        "ssh"
+      ]
+    }
+  }
+]
