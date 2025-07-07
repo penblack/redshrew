@@ -36,7 +36,7 @@ export default function WhyRedShrewBlog() {
           </p>
 
           <p>
-            The <span className="text-white font-bold">short-tailed shrew</span>, despite its size, has a revved-up metabolism and a venomous bite. If it doesn't eat for four hours, it could die—yet in that time, it will hunt tirelessly, deploying its tiny fangs with precision. Like the shrew, our philosophy is built around <span className="text-white">stealthy aggression</span>: deploying silent weapons, feigning weakness, and responding only when the adversary is fully committed and unguarded.
+            The <span className="text-white font-bold">short-tailed shrew</span>, despite its size, has a revved-up metabolism and a venomous bite. If it doesn&apos;t eat for four hours, it could die—yet in that time, it will hunt tirelessly, deploying its tiny fangs with precision. Like the shrew, our philosophy is built around <span className="text-white">stealthy aggression</span>: deploying silent weapons, feigning weakness, and responding only when the adversary is fully committed and unguarded.
           </p>
 
           <h2 className="text-2xl font-bold text-white">Power in Deception</h2>

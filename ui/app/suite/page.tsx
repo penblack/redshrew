@@ -20,7 +20,7 @@ type EventLog = {
   tool: string;
   action: string;
   status: string;
-  metadata?: Record<string, any>;
+  metadata?: Record<string, unknown>;
 };
 
 type SystemStatus = {
@@ -32,13 +32,13 @@ type SystemStatus = {
 } | null;
 
 export default function CommandCenter() {
-  const [activeTab, setActiveTab] = useState('dashboard');
+  const [activeTab, setActiveTab] = useState<'dashboard' | 'tools' | 'events' | 'cloud' | 'settings'>('dashboard');
   const [phantomStatus, setPhantomStatus] = useState<PhantomStatus>(null);
   const [honeypitchStatus, setHoneyPitchStatus] = useState<HoneyPitchStatus>(null);
   const [eventLogs, setEventLogs] = useState<EventLog[]>([]);
   const [systemStatus, setSystemStatus] = useState<SystemStatus>(null);
 
-  async function handlePhantomKeyStart() {
+  const handlePhantomKeyStart = async () => {
     try {
       const response = await fetch('/api/phantomkey/start', {
         method: 'POST',
@@ -51,9 +51,9 @@ export default function CommandCenter() {
       console.error('Error calling PhantomKey:', error);
       setPhantomStatus({ error: 'Failed to connect to backend' });
     }
-  }
+  };
 
-  async function handleHoneyPitchStart() {
+  const handleHoneyPitchStart = async () => {
     try {
       const response = await fetch('/api/honeypitch/start', {
         method: 'POST',
@@ -65,7 +65,7 @@ export default function CommandCenter() {
       console.error('Error calling HoneyPitch:', error);
       setHoneyPitchStatus({ error: 'Failed to connect to backend' });
     }
-  }
+  };
 
   useEffect(() => {
     if (activeTab === 'dashboard') {
@@ -76,9 +76,16 @@ export default function CommandCenter() {
     } else if (activeTab === 'events') {
       fetch('/api/observer/logs')
         .then((res) => res.json())
-        .then((data) => setEventLogs(data))
+        .then((data: EventLog[]) => setEventLogs(data))
         .catch(() =>
-          setEventLogs([{ timestamp: '', tool: '', action: '', status: 'Failed to fetch logs' }])
+          setEventLogs([
+            {
+              timestamp: new Date().toISOString(),
+              tool: 'Observer',
+              action: 'Fetch Logs',
+              status: 'Failed to fetch logs',
+            },
+          ])
         );
     }
   }, [activeTab]);
@@ -99,7 +106,7 @@ export default function CommandCenter() {
           ['events', Eye, 'Event Log'],
           ['cloud', Cloud, 'Cloud Sync'],
           ['settings', Settings, 'Settings'],
-        ] as [string, React.ElementType, string][]).map(([tab, Icon, label]) => (
+        ] as const).map(([tab, Icon, label]) => (
           <button
             key={tab}
             onClick={() => setActiveTab(tab)}
@@ -134,43 +141,21 @@ export default function CommandCenter() {
 
         {activeTab === 'tools' && (
           <div className="space-y-10">
-            {/* PhantomKey */}
-            <div className="space-y-4">
-              <h2 className="text-xl font-bold text-red-400">PhantomKey</h2>
-              <p className="text-sm text-gray-400">Generate decoy skeletons to catch intruders.</p>
-              <button
-                onClick={handlePhantomKeyStart}
-                className="bg-red-600 hover:bg-red-700 px-4 py-2 rounded-lg text-sm font-semibold shadow"
-              >
-                Start PhantomKey
-              </button>
-              {phantomStatus && (
-                <pre className="bg-zinc-800 p-4 rounded text-sm text-green-400 mt-4">
-                  {JSON.stringify(phantomStatus, null, 2)}
-                </pre>
-              )}
-            </div>
-
-            {/* HoneyPitch */}
-            <div className="space-y-4">
-              <h2 className="text-xl font-bold text-red-400">HoneyPitch</h2>
-              <p className="text-sm text-gray-400">Deploy fake files or services to catch intruders.</p>
-              <button
-                onClick={handleHoneyPitchStart}
-                className="bg-red-600 hover:bg-red-700 px-4 py-2 rounded-lg text-sm font-semibold shadow"
-              >
-                Start HoneyPitch
-              </button>
-              {honeypitchStatus && (
-                <pre className="bg-zinc-800 p-4 rounded text-sm text-green-400 mt-4">
-                  {JSON.stringify(honeypitchStatus, null, 2)}
-                </pre>
-              )}
-            </div>
+            <ToolModule
+              title="PhantomKey"
+              description="Generate decoy skeletons to catch intruders."
+              onStart={handlePhantomKeyStart}
+              status={phantomStatus}
+            />
+            <ToolModule
+              title="HoneyPitch"
+              description="Deploy fake files or services to catch intruders."
+              onStart={handleHoneyPitchStart}
+              status={honeypitchStatus}
+            />
           </div>
         )}
 
-        {/* Event Logs */}
         {activeTab === 'events' && (
           <div className="space-y-4">
             <h2 className="text-xl font-bold text-red-400">Event Logs</h2>
@@ -209,4 +194,34 @@ function tabClass(active: string, name: string) {
       ? 'bg-red-600 text-white shadow-lg'
       : 'text-gray-300 hover:bg-zinc-800 hover:text-white'
   }`;
+}
+
+function ToolModule({
+  title,
+  description,
+  onStart,
+  status,
+}: {
+  title: string;
+  description: string;
+  onStart: () => void;
+  status: PhantomStatus | HoneyPitchStatus;
+}) {
+  return (
+    <div className="space-y-4">
+      <h2 className="text-xl font-bold text-red-400">{title}</h2>
+      <p className="text-sm text-gray-400">{description}</p>
+      <button
+        onClick={onStart}
+        className="bg-red-600 hover:bg-red-700 px-4 py-2 rounded-lg text-sm font-semibold shadow"
+      >
+        Start {title}
+      </button>
+      {status && (
+        <pre className="bg-zinc-800 p-4 rounded text-sm text-green-400 mt-4">
+          {JSON.stringify(status, null, 2)}
+        </pre>
+      )}
+    </div>
+  );
 }

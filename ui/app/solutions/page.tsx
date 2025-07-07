@@ -1,6 +1,6 @@
 'use client';
 
-import { KeyRound, Fish, Eye, ShieldCheck, ShieldAlert, Waypoints } from 'lucide-react';
+import { KeyRound, Eye, ShieldCheck, ShieldAlert, Waypoints } from 'lucide-react';
 
 export default function SolutionsPage() {
   return (

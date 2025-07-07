@@ -1,34 +1,37 @@
-//import Image from "next/image";
+'use client';
+
+import Image from "next/image";
 
 export default function Home() {
   return (
     <main className="relative min-h-screen bg-black text-white px-6 py-0 overflow-hidden font-sans">
       {/* Red Glitch Background GIF */}
       <div className="absolute right-0 top-0 w-1/2 h-full z-0 overflow-hidden pointer-events-none">
-        <img
+        <Image
           src="/glitch-background.gif"
           alt="Glitch Background"
+          width={800}
+          height={1000}
           className="w-full h-full object-cover opacity-30 mix-blend-screen"
+          priority
         />
       </div>
 
-     {/*
-  Left-Side Glitch Overlay
+      {/*
+        Left-Side Glitch Overlay — Optional
 
-  <div className="absolute top-0 right-0 w-1/2 h-full z-0 overflow-hidden pointer-events-none">
-    <img
-      src="/hover_red_glitch.gif"
-      alt="Glitch Overlay Left"
-      className="w-full h-full object-cover opacity-30 mix-blend-screen"
-    />
-  </div>
-*/}
+        <div className="absolute top-0 right-0 w-1/2 h-full z-0 overflow-hidden pointer-events-none">
+          <Image
+            src="/hover_red_glitch.gif"
+            alt="Glitch Overlay Left"
+            width={800}
+            height={1000}
+            className="w-full h-full object-cover opacity-30 mix-blend-screen"
+          />
+        </div>
+      */}
 
-
-
-
-
-      {/* Static Grid Background — optional, can remove */}
+      {/* Static Grid Background */}
       <div
         className="absolute right-0 top-0 w-1/2 h-full bg-[radial-gradient(circle,_rgba(255,0,0,0.15)_1px,_transparent_1px)] bg-[length:4px_4px] opacity-20 pointer-events-none z-0"
         aria-hidden="true"
@@ -46,11 +49,11 @@ export default function Home() {
         </p>
 
         <a
-  href="/demo"
-  className="inline-block border-2 border-red-500 text-red-500 px-12 py-5 rounded-md hover:bg-red-500 hover:text-black font-semibold transition text-2xl tracking-wide"
->
-  See PhantomKey in Action
-</a>
+          href="/demo"
+          className="inline-block border-2 border-red-500 text-red-500 px-12 py-5 rounded-md hover:bg-red-500 hover:text-black font-semibold transition text-2xl tracking-wide"
+        >
+          See PhantomKey in Action
+        </a>
       </section>
     </main>
   );
