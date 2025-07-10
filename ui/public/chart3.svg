@@ -1,0 +1,36 @@
+<svg width="284" height="165" viewBox="0 0 284 165" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Card Outline -->
+  <rect x="1" y="1" width="282" height="163" rx="12" fill="#191415" stroke="#ba2424" stroke-width="3"></rect>
+  <!-- Progress Bar Track -->
+  <rect x="22" y="18" width="60" height="16" rx="8" fill="#181112" stroke="#ededed" stroke-width="1"></rect>
+  <!-- Progress Bar Fill -->
+  <rect x="22" y="18" width="44" height="16" rx="8" fill="#e84536"></rect>
+  <rect x="66" y="18" width="8" height="16" rx="2" fill="#ba2424"></rect>
+  <!-- Faint segment at the end -->
+  <rect x="74" y="18" width="8" height="16" rx="2" fill="#5d2827"></rect>
+  <!-- Percentage -->
+  <text x="180" y="32" font-family="Inter, Arial, sans-serif" font-size="24" font-weight="bold" fill="#e84536">+3.6%</text>
+  <!-- Line chart (simplified) -->
+  <polyline points="22,56 42,58 65,62 90,59 110,62 129,56 145,62 154,57" fill="none" stroke="#e84536" stroke-width="2"></polyline>
+  <!-- Faded area under line chart -->
+  <linearGradient id="fadedRed" x1="0" y1="56" x2="0" y2="130" gradientUnits="userSpaceOnUse">
+    <stop stop-color="#e84536" stop-opacity="0.18"></stop>
+    <stop offset="1" stop-color="#e84536" stop-opacity="0"></stop>
+  </linearGradient>
+  <polygon points="22,56 42,58 65,62 90,59 110,62 129,56 145,62 154,57 154,130 22,130" fill="url(#fadedRed)"></polygon>
+  <!-- Donut Chart (outer and inner rings, 4 segments) -->
+  <g>
+    <circle cx="210" cy="90" r="40" fill="none" stroke="#e84536" stroke-width="14"></circle>
+    <path d="M210 50
+              a40 40 0 0 1 35 58" fill="none" stroke="#ffb3b3" stroke-width="14"></path> <!-- light segment -->
+    <path d="M245 108
+              a40 40 0 0 1 -35 22" fill="none" stroke="#ff6767" stroke-width="14"></path> <!-- mid segment -->
+    <circle cx="210" cy="90" r="28" fill="none" stroke="#191415" stroke-width="9"></circle>
+    <path d="M210 62
+              a28 28 0 0 1 25 40" fill="none" stroke="#e19191" stroke-width="9"></path>
+    <path d="M235 102
+              a28 28 0 0 1 -25 16" fill="none" stroke="#ffb3b3" stroke-width="9"></path>
+    <!-- Center cutout -->
+    <circle cx="210" cy="90" r="16" fill="#191415"></circle>
+  </g>
+</svg>

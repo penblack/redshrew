@@ -1,0 +1,14 @@
+<svg width="370" height="90" viewBox="0 0 370 90" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Extended Red Badge Rectangle -->
+  <rect x="8" y="32" width="265" height="40" rx="9" fill="#e84536"></rect>
+  <!-- Text -->
+  <text x="24" y="59" font-family="Inter, Arial, sans-serif" font-size="22" font-weight="bold" fill="#fff" letter-spacing="0.5">
+    BREACH DETECTED
+  </text>
+  <!-- Yellow Circle with X, gap slightly reduced -->
+  <g>
+    <circle cx="290" cy="52" r="28" fill="#ffc24b"></circle>
+    <line x1="274" y1="36" x2="306" y2="68" stroke="#fff" stroke-width="6" stroke-linecap="round"></line>
+    <line x1="306" y1="36" x2="274" y2="68" stroke="#fff" stroke-width="6" stroke-linecap="round"></line>
+  </g>
+</svg>

@@ -1,0 +1,59 @@
+<svg width="284" height="165" viewBox="0 0 284 165" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Outer Card Border -->
+  <rect x="1" y="1" width="282" height="163" rx="12" fill="#181112" stroke="#ba2424" stroke-width="3"></rect>
+  <!-- Card Background -->
+  <rect x="13" y="15" width="258" height="135" rx="3" fill="#191415"></rect>
+  <!-- Table Alternating Stripes -->
+  <g opacity="0.12">
+    <rect x="13" y="27" width="258" height="12" fill="#fff"></rect>
+    <rect x="13" y="51" width="258" height="12" fill="#fff"></rect>
+    <rect x="13" y="75" width="258" height="12" fill="#fff"></rect>
+    <rect x="13" y="99" width="258" height="12" fill="#fff"></rect>
+    <rect x="13" y="123" width="258" height="12" fill="#fff"></rect>
+  </g>
+  <!-- Main Table Outline -->
+  <rect x="23" y="31" width="238" height="90" fill="none" stroke="#564142" stroke-width="1.4"></rect>
+  <!-- Left List (rows) -->
+  <g stroke="#564142" stroke-width="1">
+    <line x1="53" y1="31" x2="53" y2="121"></line>
+    <line x1="23" y1="43" x2="261" y2="43"></line>
+    <line x1="23" y1="55" x2="261" y2="55"></line>
+    <line x1="23" y1="67" x2="261" y2="67"></line>
+    <line x1="23" y1="79" x2="261" y2="79"></line>
+    <line x1="23" y1="91" x2="261" y2="91"></line>
+    <line x1="23" y1="103" x2="261" y2="103"></line>
+    <line x1="23" y1="115" x2="261" y2="115"></line>
+  </g>
+  <!-- Left Side Text lines -->
+  <g stroke="#ba2424" stroke-width="2">
+    <line x1="29" y1="37" x2="47" y2="37"></line>
+    <line x1="29" y1="49" x2="43" y2="49"></line>
+    <line x1="29" y1="61" x2="48" y2="61"></line>
+    <line x1="29" y1="73" x2="40" y2="73"></line>
+    <line x1="29" y1="85" x2="46" y2="85"></line>
+    <line x1="29" y1="97" x2="45" y2="97"></line>
+    <line x1="29" y1="109" x2="50" y2="109"></line>
+  </g>
+  <!-- Main Timeline Steps (dark steps) -->
+  <g>
+    <rect x="54" y="40" width="16" height="7" fill="#39201f"></rect>
+    <rect x="70" y="47" width="14" height="7" fill="#39201f"></rect>
+    <rect x="84" y="54" width="11" height="7" fill="#39201f"></rect>
+    <!-- Highlight Step -->
+    <rect x="95" y="54" width="28" height="7" fill="#e84536"></rect>
+    <rect x="123" y="61" width="10" height="7" fill="#39201f"></rect>
+    <rect x="133" y="68" width="8" height="7" fill="#39201f"></rect>
+    <rect x="141" y="75" width="11" height="7" fill="#39201f"></rect>
+    <!-- Another highlight step -->
+    <rect x="152" y="75" width="31" height="7" fill="#e84536"></rect>
+    <rect x="183" y="82" width="11" height="7" fill="#39201f"></rect>
+    <rect x="194" y="89" width="7" height="7" fill="#39201f"></rect>
+    <rect x="201" y="96" width="8" height="7" fill="#39201f"></rect>
+    <rect x="209" y="103" width="15" height="7" fill="#39201f"></rect>
+  </g>
+  <!-- Vertical marker -->
+  <line x1="168" y1="31" x2="168" y2="121" stroke="#ba2424" stroke-width="2"></line>
+  <!-- Marker dots -->
+  <circle cx="168" cy="31" r="4" fill="#ba2424"></circle>
+  <circle cx="168" cy="121" r="4" fill="#ba2424"></circle>
+</svg>

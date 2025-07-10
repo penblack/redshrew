@@ -50,3 +50,11 @@ body {
 .animate-ping-slow {
   animation: ping-slow 2s cubic-bezier(0, 0, 0.2, 1) infinite;
 }
+
+.shrewombre {
+  background: linear-gradient(90deg, #a11b25 0%, #e4757a 100%);
+}
+.hover\:shrewombre:hover {
+  background: linear-gradient(90deg, #a11b25 0%, #e4757a 100%);
+  color: #fff !important; /* ensures text stays readable */
+}
