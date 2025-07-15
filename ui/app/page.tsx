@@ -4,6 +4,7 @@ import Image from "next/image";
 import { useState } from "react";
 import { motion } from "framer-motion";
 import ContentCarousel from "@/components/ContentCarousel";
+import './globals.css';
 
 
 export default function Home() {
@@ -30,7 +31,7 @@ export default function Home() {
         initial={{ opacity: 0.6, scale: 1 }}
         animate={{ opacity: [0.6, 0.7, 0.6], scale: [1, 1.05, 1] }}
         transition={{ duration: 8, repeat: Infinity }}
-        className="absolute top-[12%] left-1/2 -translate-x-1/2 -translate-y-1/2 w-[140vw] h-[140vh] z-0 pointer-events-none"
+        className="absolute top-[11%] left-1/2 -translate-x-1/2 -translate-y-1/2 w-[140vw] h-[140vh] z-0 pointer-events-none"
         aria-hidden="true"
       >
         <div className="w-full h-full bg-[radial-gradient(ellipse_at_center,_rgba(255,0,0,0.5)_0%,_transparent_65%)] blur-2xl" />
@@ -49,7 +50,7 @@ export default function Home() {
           </pattern>
           <filter id="distort">
             <feTurbulence type="turbulence" baseFrequency="0.008" numOctaves="2" result="turbulence">
-              <animate attributeName="baseFrequency" dur="35s" values="0.008;0.009;0.008" repeatCount="indefinite" />
+              <animate attributeName="baseFrequency" dur="20s" values="0.008;0.009;0.008" repeatCount="indefinite" />
             </feTurbulence>
             <feDisplacementMap in="SourceGraphic" in2="turbulence" scale="12" />
           </filter>
@@ -75,7 +76,7 @@ export default function Home() {
       <canvas id="particles" className="absolute inset-0 w-full h-full z-0 pointer-events-none opacity-20" />
 
       {/* 🔻 TOP BANNER CTA */}
-      <div className="w-full text-center z-20 relative mt-18">
+      <div className="w-full text-center z-20 relative mt-3">
   <a
     href="https://discord.gg/redshrew"
     className="
@@ -90,7 +91,7 @@ export default function Home() {
 </div>
 
 
-      <section className="relative z-10 flex flex-col justify-start items-center px-6 sm:px-12 lg:px-24 text-center min-h-[100vh] pt-[4vh]">
+      <section className="relative z-40 flex flex-col justify-start items-center px-6 sm:px-12 lg:px-24 text-center min-h-[100vh] pt-[4vh]">
         <h1 className="text-[3.5rem] sm:text-[4.5rem] lg:text-[5.5rem] font-extrabold leading-tight text-white mb-4 drop-shadow-[0_0_30px_rgba(255,0,0,0.6)]">
           Deception is defense.
         </h1>
@@ -99,11 +100,12 @@ export default function Home() {
         </p>
         <div className="flex flex-col sm:flex-row gap-4 mb-12">
           <a
-            href="/demo"
-            className="inline-block bg-white text-black hover:bg-neutral-200 transition-colors px-8 py-4 rounded-md text-lg font-semibold tracking-wide shadow-md"
-          >
-            Try PhantomKey for Free
-          </a>
+  href="/demo"
+  className="inline-block bg-white text-black hover:shrewombre hover:text-white transition-colors px-8 py-4 rounded-md text-lg font-semibold tracking-wide shadow-md"
+  style={{ transition: 'background 0.3s, color 0.3s' }}
+>
+  Try PhantomKey for Free
+</a>
           <a
             href="/suite"
             className="inline-block border-2 border-red-500 text-white hover:bg-red-300 hover:text-black transition-colors px-8 py-4 rounded-md text-lg font-semibold tracking-wide shadow-md"
@@ -198,6 +200,26 @@ export default function Home() {
       </div>
       <div className="flex justify-center">
         <img src="/logos/yamahamotorcorporation.svg" alt="Yamaha Motor Corporation" width={110} height={48}
+          className="object-contain grayscale opacity-80 hover:opacity-100 hover:grayscale-0 transition-all duration-200"
+          style={{ filter: "invert(1) brightness(2)" }} />
+      </div>
+       <div className="flex justify-center">
+        <img src="/logos/anthropic.svg" alt="Anthropic" width={110} height={48}
+          className="object-contain grayscale opacity-80 hover:opacity-100 hover:grayscale-0 transition-all duration-200"
+          style={{ filter: "invert(1) brightness(2)" }} />
+      </div>
+       <div className="flex justify-center">
+        <img src="/logos/binance.svg" alt="Binance" width={110} height={48}
+          className="object-contain grayscale opacity-80 hover:opacity-100 hover:grayscale-0 transition-all duration-200"
+          style={{ filter: "invert(1) brightness(2)" }} />
+      </div>
+       <div className="flex justify-center">
+        <img src="/logos/uber.svg" alt="Uber" width={110} height={48}
+          className="object-contain grayscale opacity-80 hover:opacity-100 hover:grayscale-0 transition-all duration-200"
+          style={{ filter: "invert(1) brightness(2)" }} />
+      </div>
+       <div className="flex justify-center">
+        <img src="/logos/paloaltonetworks.svg" alt="Palo Alto" width={110} height={48}
           className="object-contain grayscale opacity-80 hover:opacity-100 hover:grayscale-0 transition-all duration-200"
           style={{ filter: "invert(1) brightness(2)" }} />
       </div>
@@ -516,17 +538,8 @@ export default function Home() {
 
 
 
-<section className="w-full flex flex-col items-center justify-center py-20 bg-black relative overflow-hidden">
-  {/* 🔴 Red bottom glow */}
-  <div
-    className="absolute left-1/2 bottom-0 -translate-x-1/2 z-0 pointer-events-none"
-    style={{
-      width: "120vw",
-      height: "300px",
-      background: "radial-gradient(ellipse at center, rgba(255,0,0,0.44) 0%, transparent 80%)",
-      filter: "blur(32px) brightness(1.2)",
-    }}
-  />
+<section className="relative w-full flex flex-col items-center justify-center pt-0 pb-20 bg-black overflow-hidden">
+ 
   <div className="relative z-10 flex flex-col items-center max-w-3xl mx-auto text-center px-4">
     <h2 className="text-3xl sm:text-4xl font-extrabold text-white mb-4">
       Fix it, don’t just observe it.
@@ -537,13 +550,13 @@ export default function Home() {
     <div className="flex flex-wrap gap-4 items-center justify-center">
       <a
         href="/demo"
-        className="bg-red-700 hover:bg-red-500 text-white font-bold px-8 py-3 rounded-full shadow-lg text-lg transition-colors"
+        className="bg-neutral-200 hover:bg-red-500 text-black font-bold px-8 py-3 rounded-full shadow-lg text-lg transition-colors"
       >
         TRY REDSHREW FOR FREE
       </a>
       <a
         href="/suite"
-        className="border-2 border-red-500 text-white hover:bg-red-700 hover:text-white px-8 py-3 rounded-full shadow text-lg font-bold transition-colors"
+        className="border-2 border-red-500 text-white hover:shrewombre hover:text-white px-8 py-3 rounded-full shadow text-lg font-bold transition-colors"
       >
         EXPLORE OUR SUITE
       </a>
