@@ -10,40 +10,40 @@ const VISIBLE_CARDS = 3;
 
 const articles = [
   {
-    img: "/content1.jpg",
+    img: "/gaming.png",
     title: "RedShrew for Gaming",
     description: "Your telemetry reveals more than logs alone. Whether you’re building FPS, MMOs, or strategy titles, see attacker moves in real time.",
-    video: true,
+    video: false,
   },
   {
-    img: "/content2.jpg",
+    img: "/lunch.png",
     title: "Lunch & Learn: Real Tracing",
     description: "Errors are just the start. Learn how to spot and trace lateral movement before it escalates. Your users will never know.",
     video: false,
   },
   {
-    img: "/content3.jpg",
+    img: "/monitoring.png",
     title: "Threat Monitoring by RedShrew",
     description: "Designed for defenders, RedShrew’s analytics cut the guesswork and empower you to pinpoint intruders without slowing your stack.",
     video: false,
   },
   {
-    img: "/content4.jpg",
+    img: "/mobile.png",
     title: "RedShrew for Mobile Apps",
     description: "From app exploits to session hijacks—capture and replay runtime threats in one view. Get the holistic story.",
-    video: true,
+    video: false,
   },
   {
-    img: "/content5.jpg",
+    img: "/osint.png",
     title: "OSINT for Defenders",
     description: "Combine OSINT signals with live telemetry for total situational awareness and rapid attacker attribution.",
     video: false,
   },
   {
-    img: "/content6.jpg",
+    img: "/replay.png",
     title: "Replay: Real-World Attacks",
     description: "See every click and keystroke. Rewind breaches and study adversaries like never before.",
-    video: true,
+    video: false,
   },
 ];
 
@@ -136,7 +136,7 @@ export default function ContentCarousel() {
       <h2 className="text-white text-3xl sm:text-4xl font-bold mb-12 text-center z-10">Of course we have more content</h2>
       {/* Arrow Left */}
       <button
-        className="absolute left-8 top-1/2 -translate-y-1/2 z-20 bg-black/60 hover:bg-black/80 rounded-full p-2 border border-white/20 shadow"
+        className="absolute left-89 top-1/2 -translate-y-1/2 z-20 bg-black/60 hover:bg-black/80 rounded-full p-2 border border-white/20 shadow"
         aria-label="Scroll left"
         onClick={() => scroll("left")}
       >
@@ -152,7 +152,7 @@ export default function ContentCarousel() {
       </button>
 
       {/* Fade left */}
-      <div className="pointer-events-none absolute left-0 top-0 h-full w-40 z-20 flex items-center">
+      <div className="pointer-events-none absolute left-85 top-9 h-full w-40 z-20 flex items-center">
         <div
           className="h-[65%] w-full rounded-l-2xl blur-xl"
           style={{
@@ -163,7 +163,7 @@ export default function ContentCarousel() {
         />
       </div>
       {/* Fade right */}
-      <div className="pointer-events-none absolute right-0 top-0 h-full w-40 z-20 flex items-center">
+      <div className="pointer-events-none absolute right-85 top-9 h-full w-40 z-20 flex items-center">
         <div
           className="h-[65%] w-full rounded-r-2xl blur-xl"
           style={{

@@ -9,10 +9,7 @@ import './globals.css';
 
 export default function Home() {
   // Expanding feature cards state
-  const [open, setOpen] = useState<[boolean, boolean, boolean]>([true, false, false]);
-  const handleToggle = (idx: number) => {
-    setOpen(open.map((v, i) => (i === idx ? !v : false)) as [boolean, boolean, boolean]);
-  };
+
 
   // Getting Started dropdown/code state
   const [selectedPlatform, setSelectedPlatform] = useState<string>("Next.js");
@@ -116,7 +113,7 @@ export default function Home() {
         {/* 🖥️ MONITOR UI IMAGE */}
         <div className="relative w-full max-w-[1100px] px-4 sm:px-12 -mt-25">
           <Image
-            src="/monitor.png"
+            src="/monitor2.png"
             alt="RedShrew Suite Monitor UI"
             width={1400}
             height={900}
@@ -304,116 +301,153 @@ export default function Home() {
 
 
 
+{/* ─── Honeypot Traps Section ────────────────────────────────────────────── */}
 <section className="relative w-full py-24 flex flex-col items-center bg-black overflow-x-hidden">
-  {/* Wavy Red Grid Background */}
+  {/* 🔳 CURVED GRID OVERLAY */}
   <svg
-    className="absolute inset-0 w-full h-full pointer-events-none z-0"
-    viewBox="0 0 1920 820"
-    fill="none"
-    aria-hidden="true"
-    preserveAspectRatio="none"
+    className="absolute inset-0 z-0 pointer-events-none"
+    viewBox="0 0 800 600"
+    xmlns="http://www.w3.org/2000/svg"
+    preserveAspectRatio="xMidYMid slice"
   >
     <defs>
-      <pattern id="redGrid" width="40" height="40" patternUnits="userSpaceOnUse">
+      <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
         <path d="M 40 0 L 0 0 0 40" fill="none" stroke="red" strokeWidth="1" />
       </pattern>
       <filter id="distort">
         <feTurbulence type="turbulence" baseFrequency="0.008" numOctaves="2" result="turbulence">
-          <animate attributeName="baseFrequency" dur="30s" values="0.008;0.009;0.008" repeatCount="indefinite" />
+          <animate attributeName="baseFrequency" dur="20s" values="0.008;0.009;0.008" repeatCount="indefinite" />
         </feTurbulence>
-        <feDisplacementMap in="SourceGraphic" in2="turbulence" scale="18" />
+        <feDisplacementMap in="SourceGraphic" in2="turbulence" scale="12" />
       </filter>
-      <linearGradient id="fadeGrid" gradientTransform="rotate(90)">
+      <linearGradient id="fadeMask" gradientTransform="rotate(90)">
         <stop offset="0%" stopColor="white" stopOpacity="0" />
         <stop offset="20%" stopColor="white" stopOpacity="1" />
       </linearGradient>
-      <mask id="maskGrid">
-        <rect width="100%" height="100%" fill="url(#fadeGrid)" />
+      <mask id="fade">
+        <rect width="100%" height="100%" fill="url(#fadeMask)" />
       </mask>
     </defs>
     <rect
       width="100%"
       height="100%"
-      fill="url(#redGrid)"
+      fill="url(#grid)"
       filter="url(#distort)"
-      mask="url(#maskGrid)"
-      opacity="0.14"
+      mask="url(#fade)"
+      opacity="0.12"
     />
   </svg>
 
   <div className="relative z-10 max-w-6xl w-full mx-auto">
-    {/* Top Row */}
+    {/* ─── Top Row: Honeypot Traps ─────────────────────────────────────── */}
     <div className="grid grid-cols-1 md:grid-cols-2 gap-20 mb-24">
-      {/* Error Monitoring (Left) */}
       <div className="flex flex-col justify-center">
-        <h5 className="text-xs uppercase text-[#e4757a] font-bold mb-2 tracking-wider">Deception-Driven Threat Detection</h5>
-        <h2 className="text-2xl md:text-3xl font-bold text-white mb-5">Honeypot Traps</h2>
-        <div className="flex flex-col gap-3 mb-8">
-          <div className="rounded-xl border-2 border-[#e4757a] bg-[#191418]/90 p-5 text-white font-semibold text-base shadow-lg">
-            <div className="mb-1 text-white font-bold">Prioritize Real Threats</div>
-            <div className="text-xs text-neutral-300 mb-2">Instantly surface attacker actions that matter most. Deceive, observe, and triage intrusions in real time, no more alert fatigue.</div>
-            <button className="inline-block rounded-full px-4 py-1 text-xs font-bold text-white bg-[#e4757a] hover:bg-[#7e191a] shadow transition">
+        <h5 className="text-xs uppercase text-[#e4757a] font-bold mb-2 tracking-wider">
+          Deception-Driven Threat Detection
+        </h5>
+        <h2 className="text-2xl md:text-3xl font-bold text-white mb-5">
+          Honeypot Traps
+        </h2>
+        <div className="flex flex-col gap-6 mb-8">
+          {/* Card 1 */}
+          <div className="rounded-xl bg-[#191418]/90 p-5 text-white font-semibold text-base shadow-lg">
+            <div className="mb-1 font-bold">Prioritize Real Threats</div>
+            <p className="text-xs text-neutral-300 mb-3">
+              Instantly surface attacker actions that matter most. Deceive, observe, and triage intrusions in real time, no more alert fatigue.
+            </p>
+            <button className="inline-block rounded-full px-4 py-1 text-xs font-bold text-white bg-[#7e191a] hover:bg-[#e4757a] shadow transition">
               Read the docs
             </button>
           </div>
-          <button className="rounded-lg bg-[#7e191a] hover:bg-[#e4757a] px-6 py-3 text-white font-semibold transition border border-[#e4757a]/60">
-            Trace the Intruder
-            <div className="text-xs text-neutral-300 mb-2">Rewind every move made by adversaries. Follow their path from the first scan to their last attempt at lateral movement.</div>
+
+          {/* Card 2 */}
+          <div className="rounded-xl bg-[#403a3a] p-5 text-white font-semibold text-base shadow-lg">
+            <div className="mb-1 font-bold">Trace the Intruder</div>
+            <p className="text-xs text-neutral-300 mb-3">
+              Rewind every move made by adversaries. Follow their path from the first scan to their last attempt at lateral movement.
+            </p>
+            <button className="inline-block rounded-full px-4 py-1 text-xs font-bold text-white bg-[#191418]/90 hover:bg-[#7e191a] shadow transition">
+              Learn More
+            </button>
+          </div>
+
+          {/* Card 3 */}
+          <div className="rounded-xl bg-[#4b2727]/90 p-5 text-white font-semibold text-base shadow-lg">
+            <div className="mb-1 font-bold">Automate Your Countermeasures</div>
+            <p className="text-xs text-neutral-300 mb-3">
+              Block, mislead, or monitor attackers on autopilot. Trigger custom responses, alerts, or forensics as soon as traps are touched.
+            </p>
             <button className="inline-block rounded-full px-4 py-1 text-xs font-bold text-white bg-[#e4757a] hover:bg-[#7e191a] shadow transition">
               Learn More
-              </button>
-          </button>
-          <button className="rounded-lg bg-[#191418]/80 hover:bg-[#1a0505] px-6 py-3 text-white font-semibold transition border border-[#e4757a]/40">
-            Automate Your Countermeasures
-            <div className="text-xs text-neutral-300 mb-2">Block, mislead, or monitor attackers on autopilot. Trigger custom responses, alerts, or forensics as soon as traps are touched.</div>
-            <button className="inline-block rounded-full px-4 py-1 text-xs font-bold text-white bg-[#e4757a] hover:bg-[#7e191a] shadow transition">
-              Learn More
-              </button>
-          </button>
+            </button>
+          </div>
         </div>
       </div>
-      {/* Screenshot Right */}
+
+      {/* Honeypot Image */}
       <div className="relative flex items-center justify-center">
         <img
           src="/threatdetection.png"
           alt="Threat Detection"
-          className="rounded-xl shadow-2xl border-2 border-[#e4757a]/30 w-full max-w-xl"
+          className="rounded-xl shadow-2xl border-2 border-[#e4757a]/30 w-full max-w-xl aspect-[4/3] object-cover"
         />
-        {/* Optionally add mascot, e.g.: */}
-        {/* <img src="/mascots/arrow.svg" alt="" className="absolute left-16 bottom-0 w-20 pointer-events-none" /> */}
       </div>
     </div>
 
-    {/* Bottom Row */}
+    {/* ─── Bottom Row: Attack Tracing ──────────────────────────────────── */}
     <div className="grid grid-cols-1 md:grid-cols-2 gap-20">
-      {/* Screenshot Left */}
+      {/* Image Left */}
       <div className="relative flex items-center justify-center order-2 md:order-1">
         <img
           src="/attacktracing.png"
           alt="Attack Tracing"
-          className="rounded-xl shadow-2xl border-2 border-[#e4757a]/30 w-full max-w-xl"
+          className="rounded-xl shadow-2xl border-2 border-[#e4757a]/30 w-full max-w-xl aspect-[4/3] object-cover"
         />
       </div>
-      {/* Tracing (Right) */}
+
+      {/* Cards Right */}
       <div className="flex flex-col justify-center order-1 md:order-2">
-        <h5 className="text-xs uppercase text-[#e4757a] font-bold mb-2 tracking-wider">Attack Tracing</h5>
-        <h2 className="text-2xl md:text-3xl font-bold text-white mb-5">Don’t just observe.<br />Take action.</h2>
-        <div className="flex flex-col gap-3 mb-8">
-          <div className="rounded-xl border-2 border-[#e4757a] bg-[#191418]/90 p-5 text-white font-semibold text-base shadow-lg">
-            <div className="mb-1 text-white font-bold">Find and fix the problem, no matter where it occurs</div>
-            <div className="text-xs text-neutral-300 mb-2">
-              With Tracing, see the complete end-to-end path that data takes through your distributed system to pinpoint the exact origin of an issue.
-            </div>
+        <h5 className="text-xs uppercase text-[#e4757a] font-bold mb-2 tracking-wider">
+          Attack Tracing
+        </h5>
+        <h2 className="text-2xl md:text-3xl font-bold text-white mb-5">
+          Don’t just observe.<br />Take action.
+        </h2>
+
+        <div className="flex flex-col gap-6 mb-8">
+          {/* Card 1 */}
+          <div className="rounded-xl bg-[#191418]/90 p-5 text-white font-semibold text-base shadow-lg">
+            <div className="mb-1 font-bold">Prioritize Real Threats</div>
+            <div className="mb-1 font-bold">Find &amp; Fix the Problem</div>
+            <p className="text-xs text-neutral-300 mb-3">
+              See the complete trace path from breach to bottleneck. Map attacker routes and service disruptions across your entire system.
+            </p>
+            <button className="inline-block rounded-full px-4 py-1 text-xs font-bold text-white bg-[#7e191a] hover:bg-[#e4757a] shadow transition">
+              Learn more
+            </button>
+          </div>
+
+          {/* Card 2 (Refocused) */}
+          <div className="rounded-xl bg-[#403a3a] p-5 text-white font-semibold text-base shadow-lg">
+            <div className="mb-1 font-bold">Pinpoint Attacker Choke Points</div>
+            <p className="text-xs text-neutral-300 mb-3">
+              Identify network or system areas where attackers repeatedly fail or succeed. Use trace telemetry to dynamically reinforce weak points.
+            </p>
+            <button className="inline-block rounded-full px-4 py-1 text-xs font-bold text-white bg-[#191418] hover:bg-[#7e191a] shadow transition">
+              Learn more
+            </button>
+          </div>
+
+          {/* Card 3 */}
+          <div className="rounded-xl bg-[#4b2727]/90 p-5 text-white font-semibold text-base shadow-lg">
+            <div className="mb-1 font-bold">Investigate Known Threat Patterns</div>
+            <p className="text-xs text-neutral-300 mb-3">
+              Detect repeating exploit attempts and adversary behavior using historical trace patterns. Optimize defenses based on real TTPs.
+            </p>
             <button className="inline-block rounded-full px-4 py-1 text-xs font-bold text-white bg-[#e4757a] hover:bg-[#7e191a] shadow transition">
               Learn more
             </button>
           </div>
-          <button className="rounded-lg bg-[#7e191a] hover:bg-[#e4757a] px-6 py-3 text-white font-semibold transition border border-[#e4757a]/60">
-            Solve slow, fast
-          </button>
-          <button className="rounded-lg bg-[#191418]/80 hover:bg-[#1a0505] px-6 py-3 text-white font-semibold transition border border-[#e4757a]/40">
-            Investigate known problems
-          </button>
         </div>
       </div>
     </div>
@@ -424,49 +458,71 @@ export default function Home() {
 
 
 
-      {/* Getting Started Section */}
-      <section className="relative z-10 w-full flex flex-col items-center py-24 bg-gradient-to-b from-black via-neutral-900 to-[#1a0505] overflow-x-hidden">
-        <div className="relative z-10 max-w-2xl w-full text-center px-4">
-          <h2 className="font-extrabold text-3xl sm:text-4xl lg:text-5xl text-white mb-7">
-            Getting Started is Simple
-          </h2>
-          <p className="text-neutral-200 text-lg mb-12">
-            RedShrew works with every major platform and technology stack.<br />
-            Start catching adversaries with just a few lines of code.
-          </p>
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-3 mb-7">
-            <span className="font-semibold text-neutral-300">Choose your platform:</span>
-            <select
-              className="bg-neutral-900 border border-red-700 text-white rounded-md px-4 py-2 font-semibold"
-              value={selectedPlatform}
-              onChange={e => setSelectedPlatform(e.target.value)}
-            >
-              {Object.keys(codeExamples).map(platform => (
-                <option value={platform} key={platform}>{platform}</option>
-              ))}
-            </select>
-          </div>
-          <div className="bg-neutral-900 text-left rounded-xl shadow-lg p-4 mb-6 w-full flex items-center justify-between">
-            <span className="font-mono text-base text-white select-all">
-              npx @redshrew/wizard@latest -i {selectedPlatform.toLowerCase()}
-            </span>
-            <button className="ml-3 text-red-400 hover:text-white">📋</button>
-          </div>
-          <div className="bg-neutral-900 text-left rounded-xl shadow-lg p-4 mb-8 w-full overflow-x-auto">
-            <pre className="text-sm text-neutral-200">
-              <code>{codeExamples[selectedPlatform]}</code>
-            </pre>
-          </div>
-          <div className="flex flex-wrap items-center justify-center gap-6">
-            <a href="/signup" className="bg-red-700 hover:bg-red-500 text-white font-bold px-8 py-3 rounded-full shadow-lg text-lg">
-              CREATE REDSHREW ACCOUNT
-            </a>
-            <a href="/docs" className="border-2 border-red-500 text-white hover:bg-red-700 hover:text-white px-8 py-3 rounded-full shadow text-lg font-bold">
-              SEE ALL PLATFORMS
-            </a>
-          </div>
-        </div>
-      </section>
+
+
+  {/* Getting Started Section */}
+<section className="relative z-10 w-full flex flex-col items-center py-24 bg-gradient-to-b from-black via-neutral-900 to-[#1a0505] overflow-hidden">
+  <div className="relative z-10 max-w-2xl w-full text-center px-4">
+    <h2 className="font-extrabold text-3xl sm:text-4xl lg:text-5xl text-white mb-7">
+      Deploy in Seconds
+    </h2>
+    <p className="text-neutral-200 text-lg mb-12">
+      RedShrew works with every major platform and technology stack.<br />
+      Drop RedShrew into your stack. Arm your systems with deception traps instantly.
+    </p>
+
+    {/* Platform Selector */}
+    <div className="flex flex-col sm:flex-row items-center justify-center gap-3 mb-7">
+      <span className="font-semibold text-neutral-300">Choose your platform:</span>
+      <select
+        className="bg-neutral-900 border border-red-700 text-white rounded-md px-4 py-2 font-semibold"
+        value={selectedPlatform}
+        onChange={e => setSelectedPlatform(e.target.value)}
+      >
+        {Object.keys(codeExamples).map(platform => (
+          <option value={platform} key={platform}>{platform}</option>
+        ))}
+      </select>
+    </div>
+
+    {/* One-liner + Copy */}
+    <div className="bg-neutral-900 text-left rounded-xl shadow-lg p-4 mb-6 w-full overflow-x-auto">
+      <div className="flex items-center justify-between min-w-[22rem] whitespace-nowrap">
+        <span className="font-mono text-base text-white">
+          {`npx @redshrew/wizard@latest -i ${selectedPlatform.toLowerCase()}`}
+        </span>
+        <button
+          onClick={() => {
+            const cmd = `npx @redshrew/wizard@latest -i ${selectedPlatform.toLowerCase()}`;
+            navigator.clipboard.writeText(cmd);
+          }}
+          className="ml-3 p-2 hover:bg-neutral-800 rounded transition"
+          aria-label="Copy to clipboard"
+        >
+          <img src="/copy.svg" alt="Copy" className="w-5 h-5" />
+        </button>
+      </div>
+    </div>
+
+    {/* Code Example */}
+    <div className="bg-neutral-900 text-left rounded-xl shadow-lg p-4 mb-8 w-full overflow-x-auto">
+      <pre className="text-sm text-neutral-200">
+        <code>{codeExamples[selectedPlatform]}</code>
+      </pre>
+    </div>
+
+    {/* CTA Buttons */}
+    <div className="flex flex-wrap items-center justify-center gap-6">
+      <a href="/signup" className="bg-red-700 hover:bg-red-500 text-white font-bold px-8 py-3 rounded-full shadow-lg text-lg">
+        CREATE REDSHREW ACCOUNT
+      </a>
+      <a href="/platforms" className="border-2 border-red-500 text-white hover:bg-red-700 hover:text-white px-8 py-3 rounded-full shadow text-lg font-bold">
+        SEE ALL PLATFORMS
+      </a>
+    </div>
+  </div>
+</section>
+
 
 
 

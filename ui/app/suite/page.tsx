@@ -94,7 +94,7 @@ export default function CommandCenter() {
     <main className="min-h-screen bg-black text-white font-sans p-6">
       {/* Header */}
       <header className="flex items-center justify-between border-b border-red-600 pb-4 mb-6">
-        <h1 className="text-3xl font-bold text-red-500">RedShrew Command Center</h1>
+        <h1 className="text-3xl font-bold text-neutral-200">RedShrew Command Center</h1>
         <span className="text-sm text-gray-400">v0.1.0</span>
       </header>
 
@@ -157,29 +157,42 @@ export default function CommandCenter() {
         )}
 
         {activeTab === 'events' && (
-          <div className="space-y-4">
-            <h2 className="text-xl font-bold text-red-400">Event Logs</h2>
-            {eventLogs.length === 0 ? (
-              <p className="text-sm text-gray-500">No logs found.</p>
-            ) : (
-              <ul className="text-sm space-y-2">
-                {eventLogs.map((log, idx) => (
-                  <li key={log.timestamp || idx} className="bg-zinc-800 p-3 rounded shadow">
-                    <p><strong>{log.timestamp}</strong></p>
-                    <p>🛠️ Tool: {log.tool}</p>
-                    <p>📋 Action: {log.action}</p>
-                    <p>✅ Status: {log.status}</p>
-                    {log.metadata && Object.keys(log.metadata).length > 0 && (
-                      <pre className="bg-black text-green-400 p-2 rounded mt-2">
-                        {JSON.stringify(log.metadata, null, 2)}
-                      </pre>
-                    )}
-                  </li>
-                ))}
-              </ul>
+  <div className="space-y-4">
+    <h2 className="text-xl font-bold text-red-400">Event Logs</h2>
+    {eventLogs.length === 0 ? (
+      <p className="text-sm text-gray-500">No logs found.</p>
+    ) : (
+      <ul className="text-sm space-y-2">
+        {eventLogs.map((log, idx) => (
+          <li key={log.timestamp || idx} className="bg-zinc-800 p-3 rounded shadow space-y-1">
+            <p><strong>{log.timestamp}</strong></p>
+
+            <p className="flex items-center gap-2">
+              <img src="/toolbox.svg" alt="Tool icon" className="w-4 h-4" />
+              Tool: {log.tool}
+            </p>
+
+            <p className="flex items-center gap-2">
+              <img src="/logs.svg" alt="Action icon" className="w-4 h-4" />
+              Action: {log.action}
+            </p>
+
+            <p className="flex items-center gap-2">
+              <img src="/status.svg" alt="Status icon" className="w-4 h-4" />
+              Status: {log.status}
+            </p>
+
+            {log.metadata && Object.keys(log.metadata).length > 0 && (
+              <pre className="bg-black text-green-400 p-2 rounded mt-2">
+                {JSON.stringify(log.metadata, null, 2)}
+              </pre>
             )}
-          </div>
-        )}
+          </li>
+        ))}
+      </ul>
+    )}
+  </div>
+)}
 
         {activeTab === 'cloud' && <div>☁️ Cloud Connection Status and API Key Management</div>}
         {activeTab === 'settings' && <div>⚙️ Local Preferences and Config File Editor</div>}
