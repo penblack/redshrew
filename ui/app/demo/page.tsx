@@ -16,7 +16,7 @@ export default function PhantomKeyDemo() {
   };
 
   return (
-    <main className="min-h-screen bg-black text-white px-6 py-24 font-sans relative overflow-hidden">
+    <main className="relative min-h-screen bg-black text-white px-6 py-24 font-sans overflow-hidden">
       {/* SVG Distorted Red Grid */}
       <svg
         className="absolute inset-0 z-0 pointer-events-none"
@@ -52,6 +52,7 @@ export default function PhantomKeyDemo() {
         />
       </svg>
 
+      {/* PhantomKey content */}
       <div className="relative z-10 max-w-4xl mx-auto space-y-12">
         {/* Header */}
         <header className="text-center space-y-4">
@@ -118,6 +119,11 @@ Timestamp: 2025-06-27 17:12:43`}
             <div><span className="text-red-300">Operator Note:</span> Engagement active. Adversary likely testing SSH key validity via automated script.</div>
           </div>
         )}
+      </div>
+
+      {/* Footer pinned to bottom */}
+      <div className="absolute bottom-0 left-0 w-full">
+        <Footer />
       </div>
     </main>
   );

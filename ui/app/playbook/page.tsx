@@ -5,18 +5,47 @@ import Footer from "@/components/Footer";
 
 export default function PlaybookPage() {
   return (
-    <main className="min-h-screen bg-black text-white px-6 py-24 font-sans relative overflow-hidden">
-      {/* Optional Red Grid Overlay */}
-      <div
-        className="absolute inset-0 z-0 pointer-events-none"
-        style={{
-          backgroundImage:
-            'radial-gradient(rgba(255,0,0,0.05) 1px, transparent 1px)',
-          backgroundSize: '4px 4px',
-        }}
-      />
+    <main className="relative flex flex-col min-h-screen bg-black text-white overflow-hidden">
+      {/* Curved Wavy Grid Background */}
+      <svg
+        className="absolute inset-0 w-full h-full z-0 pointer-events-none"
+        viewBox="0 0 1440 800"
+        fill="none"
+        aria-hidden="true"
+        preserveAspectRatio="none"
+      >
+        <defs>
+          <linearGradient id="gridline" x1="0" y1="0" x2="0" y2="1">
+            <stop stopColor="rgba(231,20,35,1)" stopOpacity="0.2" />
+            <stop offset="1" stopColor="rgba(231,20,35,1)" stopOpacity="0.1" />
+          </linearGradient>
+        </defs>
+        {/* Horizontal waves */}
+        {[...Array(16)].map((_, i) => (
+          <path
+            key={`h${i}`}
+            d={`M 0 ${50 * i + 20} C 400 ${40 * i + 60}, 1040 ${60 * i + 10}, 1440 ${50 * i + 30}`}
+            stroke="url(#gridline)"
+            strokeWidth="1"
+            fill="none"
+          />
+        ))}
+        {/* Vertical waves */}
+        {[...Array(13)].map((_, i) => (
+          <path
+            key={`v${i}`}
+            d={`M ${120 * i} 0 C ${110 * i} 300, ${140 * i} 500, ${120 * i} 800`}
+            stroke="url(#gridline)"
+            strokeWidth="1"
+            fill="none"
+          />
+        ))}
+      </svg>
 
-      <div className="relative z-10 max-w-6xl mx-auto space-y-20">
+      {/* Top blur to fade grid into nav */}
+      <div className="absolute inset-x-0 top-0 h-24 z-10 backdrop-blur-md pointer-events-none" />
+
+      <div className="relative z-20 flex-1 max-w-6xl mx-auto px-6 py-24 space-y-20 pb-32">
         {/* Neon Title */}
         <header className="space-y-4 text-center">
           <h1 className="text-6xl font-extrabold text-red-500 tracking-wider drop-shadow-[0_0_8px_rgba(255,0,0,0.8)]">
@@ -43,28 +72,25 @@ export default function PlaybookPage() {
           </ul>
         </section>
 
-        {/* Toolkit */}
+        {/* Deployment Toolkit */}
         <section>
           <h2 className="text-3xl font-bold border-b border-red-500 pb-2 mb-6">Deployment Toolkit</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {[
               {
                 title: 'PhantomKey',
-                icon: <KeyRound size={28} className="text-red-500" />,
-                description:
-                  'Credential traps that trigger alerts on use. Fast detection of internal or external compromise.',
+                icon: <KeyRound size={28} className="text-red-500" />, 
+                description: 'Credential traps that trigger alerts on use. Fast detection of internal or external compromise.',
               },
               {
                 title: 'HoneyPitch',
-                icon: <ShieldCheck size={28} className="text-red-500" />,
-                description:
-                  'Decoy endpoints & login flows that simulate production logic. Used to trap scanners and log TTPs.',
+                icon: <ShieldCheck size={28} className="text-red-500" />, 
+                description: 'Decoy endpoints & login flows that simulate production logic. Used to trap scanners and log TTPs.',
               },
               {
                 title: 'Observer',
-                icon: <Eye size={28} className="text-red-500" />,
-                description:
-                  'Tor-routed daemon that logs attacker behavior silently. Ultra low-noise, high-context monitoring.',
+                icon: <Eye size={28} className="text-red-500" />, 
+                description: 'Tor-routed daemon that logs attacker behavior silently. Ultra low-noise, high-context monitoring.',
               },
             ].map(({ title, icon, description }) => (
               <div
@@ -81,7 +107,7 @@ export default function PlaybookPage() {
           </div>
         </section>
 
-        {/* Response Philosophy */}
+        {/* Behavioral Response */}
         <section>
           <h2 className="text-3xl font-bold border-b border-red-500 pb-2 mb-4">Behavioral Response</h2>
           <p className="text-gray-300 text-base leading-relaxed">
@@ -89,6 +115,11 @@ export default function PlaybookPage() {
             Every breach attempt becomes a learning opportunity. Every log line is intel.
           </p>
         </section>
+      </div>
+
+      {/* Footer pinned to bottom */}
+      <div className="absolute bottom-0 left-0 w-full z-20">
+        <Footer />
       </div>
     </main>
   );

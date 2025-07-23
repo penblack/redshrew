@@ -112,7 +112,7 @@ export default function Home() {
           </a>
         </div>
         {/* 🖥️ MONITOR UI IMAGE */}
-        <div className="relative w-full max-w-[1300px] px-4 sm:px-12 -mt-25">
+        <div className="relative w-full max-w-[1150px] px-4 sm:px-12 -mt-25">
           <Image
             src="/monitor3.png"
             alt="RedShrew Suite Monitor UI"
@@ -317,7 +317,7 @@ export default function Home() {
       </pattern>
       <filter id="distort">
         <feTurbulence type="turbulence" baseFrequency="0.008" numOctaves="2" result="turbulence">
-          <animate attributeName="baseFrequency" dur="20s" values="0.008;0.009;0.008" repeatCount="indefinite" />
+          <animate attributeName="baseFrequency" dur="15s" values="0.008;0.009;0.008" repeatCount="indefinite" />
         </feTurbulence>
         <feDisplacementMap in="SourceGraphic" in2="turbulence" scale="12" />
       </filter>
@@ -390,7 +390,7 @@ export default function Home() {
         <img
           src="/threatdetection.png"
           alt="Threat Detection"
-          className="rounded-xl shadow-2xl border-2 border-[#e4757a]/30 w-full max-w-xl aspect-[4/3] object-cover"
+          className="rounded-xl shadow-2xl border-2 border-[#e4757a]/30 w-full max-w-xl  object-cover"
         />
       </div>
     </div>
@@ -402,7 +402,7 @@ export default function Home() {
         <img
           src="/attacktracing.png"
           alt="Attack Tracing"
-          className="rounded-xl shadow-2xl border-2 border-[#e4757a]/30 w-full max-w-xl aspect-[4/3] object-cover"
+          className="rounded-xl shadow-2xl border-2 border-[#e4757a]/30 w-full max-w-xl  object-cover"
         />
       </div>
 
@@ -599,7 +599,7 @@ export default function Home() {
  
   <div className="relative z-10 flex flex-col items-center max-w-3xl mx-auto text-center px-4">
     <h2 className="text-3xl sm:text-4xl font-extrabold text-white mb-4">
-      Take action, don’t just observe it.
+      Outsmart Threats Before They Strike.
     </h2>
     <p className="text-lg text-neutral-300 mb-8">
       Deploy the only deception platform that empowers defenders to <span className="text-red-800 font-bold">catch, mislead, and study adversaries</span> without slowing down real operations.

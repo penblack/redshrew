@@ -2,7 +2,6 @@
 
 import Link from 'next/link';
 import Footer from "@/components/Footer";
-//import ShrewRunner from '@/components/shrewrunner';
 
 export default function EasterEggPage() {
   return (
@@ -54,6 +53,11 @@ Use responsibly... or don't.`}
         <Link href="/" className="inline-block mt-4 text-red-400 hover:text-white underline transition">
           ← Back to Surface
         </Link>
+      </div>
+
+      {/* Footer pinned to bottom */}
+      <div className="absolute bottom-0 left-0 w-full">
+        <Footer />
       </div>
     </main>
   );

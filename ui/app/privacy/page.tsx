@@ -1,17 +1,18 @@
-// pages/privacy-policy.tsx
+'use client';
 
 import Link from "next/link";
 import Footer from "@/components/Footer";
 
 export default function PrivacyPolicy() {
   return (
-    <main className="min-h-screen bg-black text-neutral-100 px-6 py-24 font-sans">
-      <div className="max-w-4xl mx-auto space-y-12">
+    <main className="relative flex flex-col min-h-screen bg-black text-neutral-100 overflow-hidden">
+      {/* Radial gradient background from EasterEggPage */}
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom,_rgba(255,0,0,0.12),_transparent)] z-0 pointer-events-none" />
+
+      <div className="relative z-10 flex-1 max-w-4xl mx-auto px-6 pt-24 pb-32 space-y-12">
         <header className="text-center space-y-4">
           <h1 className="text-4xl font-extrabold text-red-500">Privacy Policy</h1>
-          <p className="text-gray-400 text-md">
-            Last updated: July 22, 2025
-          </p>
+          <p className="text-gray-400 text-md">Last updated: July 22, 2025</p>
         </header>
 
         <section className="space-y-6">
@@ -68,6 +69,11 @@ export default function PrivacyPolicy() {
             </Link>
           </p>
         </section>
+      </div>
+
+      {/* Footer pinned to bottom */}
+      <div className="absolute bottom-0 left-0 w-full z-10">
+        <Footer />
       </div>
     </main>
   );
