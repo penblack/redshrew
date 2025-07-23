@@ -19,7 +19,7 @@ export default function DocsPage() {
             Welcome to RedShrew Docs
           </h1>
           <p className="text-neutral-400 text-lg max-w-xl">
-            Learn how to deploy deception-powered defenses across your systems using RedShrew's suite of tools.
+            Learn how to deploy deception-powered defenses across your systems using RedShrew&apos;s suite of tools.
           </p>
         </div>
         <div className="flex-1">
@@ -40,7 +40,12 @@ export default function DocsPage() {
           <h2 className="text-xl font-bold mb-3 text-red-400">Most Used RedShrew SDKs</h2>
           <ul className="space-y-2">
             {['Next.js', 'Node.js', 'Python', 'Go'].map(sdk => (
-              <li key={sdk} className="bg-zinc-900 px-4 py-2 rounded border border-zinc-800 text-white">{sdk}</li>
+              <li
+                key={sdk}
+                className="bg-zinc-900 px-4 py-2 rounded border border-zinc-800 text-white"
+              >
+                {sdk}
+              </li>
             ))}
           </ul>
         </div>
@@ -57,7 +62,7 @@ export default function DocsPage() {
               'Config Vault',
               'TrapTest',
               'FakeSSH',
-              'API Shield'
+              'API Shield',
             ].map(tool => (
               <li
                 key={tool}
@@ -78,7 +83,7 @@ export default function DocsPage() {
               'Deployment Instructions',
               'Usage in Live Environments',
               'Privacy & Legal Info',
-              'Support and Help Desk'
+              'Support and Help Desk',
             ].map(link => (
               <li
                 key={link}

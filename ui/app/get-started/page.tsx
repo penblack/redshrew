@@ -137,7 +137,7 @@ export default function GetStartedPage() {
   className="w-full py-14 flex flex-col items-center relative"
   style={{
           background: "linear-gradient(150deg, #75131e 100%, #170608 100%)",
-    clipPath: "polygon(20 0%, 100% 10%, 100% 90%, 80 100%)"
+    clipPath: 'polygon(-10% 5%, 100% 10%, 100% 70%, 0% 90%)',
   }}
 >
   <div className="text-neutral-300 text-xs tracking-wide mb-8 text-center uppercase">
