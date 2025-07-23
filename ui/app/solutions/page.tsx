@@ -39,7 +39,7 @@ const solutions = [
 export default function SolutionsPage() {
   return (
     <main className="relative flex flex-col min-h-screen bg-black text-white font-sans overflow-hidden">
-        {/* 🔳 CURVED GRID OVERLAY */}
+      {/* 🔳 CURVED GRID OVERLAY */}
       <svg
         className="absolute inset-0 z-0 pointer-events-none"
         viewBox="0 0 800 600"
@@ -74,13 +74,12 @@ export default function SolutionsPage() {
         />
       </svg>
 
-      {/* Content wrapper grows to push footer down */}
       <div className="relative z-10 flex-grow max-w-5xl mx-auto px-4 md:px-6 lg:px-0 pt-24 pb-16 space-y-12">
         <header className="text-center space-y-2">
           <span className="inline-block text-xs font-semibold uppercase text-red-500 tracking-wide">
-            Deception‑Driven Solutions
+            Deception-Driven Solutions
           </span>
-          <h1 className="text-5xl md:text-6xl font-extrabold text-white tracking-wide drop-shadow-[0_0_10px_rgba(198,23,23,0.8)]">
+          <h1 className="text-5xl md:text-6xl font-extrabold text-white tracking-wide">
             RedShrew Solutions
           </h1>
           <p className="mx-auto max-w-2xl text-base md:text-lg text-gray-300">
@@ -89,15 +88,31 @@ export default function SolutionsPage() {
           </p>
         </header>
 
-        {/* Solutions grid */}
+        {/* Top row: first 3 solutions */}
         <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 justify-items-center">
-          {solutions.map(({ title, icon: Icon, description }) => (
+          {solutions.slice(0, 3).map(({ title, icon: Icon, description }) => (
             <div
               key={title}
-              className="w-full max-w-xs bg-zinc-800/60 border border-red-600 rounded-2xl p-6 shadow-lg shadow-red-600/20 hover:shadow-red-500/40 hover:bg-zinc-700/60 transition-all duration-300"
+              className="w-full max-w-xs bg-zinc-800/60 rounded-2xl p-6 shadow-lg shadow-red-600/20 hover:shadow-red-500/40 hover:bg-zinc-700/60 transition-all duration-300"
             >
               <div className="flex items-center gap-3 mb-4">
-                <Icon size={28} className="text-red-500 drop-shadow-md" />
+                <Icon size={28} className="text-red-700 drop-shadow-md" />
+                <h3 className="text-xl font-semibold text-white">{title}</h3>
+              </div>
+              <p className="text-gray-300 text-sm leading-relaxed">{description}</p>
+            </div>
+          ))}
+        </section>
+
+        {/* Bottom row: last 2 solutions, centered */}
+        <section className="flex justify-center gap-8">
+          {solutions.slice(3).map(({ title, icon: Icon, description }) => (
+            <div
+              key={title}
+              className="w-full max-w-xs bg-zinc-800/60 rounded-2xl p-6 shadow-lg shadow-red-600/20 hover:shadow-red-500/40 hover:bg-zinc-700/60 transition-all duration-300"
+            >
+              <div className="flex items-center gap-3 mb-4">
+                <Icon size={28} className="text-red-700 drop-shadow-md" />
                 <h3 className="text-xl font-semibold text-white">{title}</h3>
               </div>
               <p className="text-gray-300 text-sm leading-relaxed">{description}</p>
@@ -111,7 +126,7 @@ export default function SolutionsPage() {
         <Footer />
       </div>
 
-      {/* Bottom wave gradient (behind footer, negative z) */}
+      {/* Bottom wave gradient (behind footer) */}
       <div className="absolute bottom-0 inset-x-0 h-40 bg-gradient-to-t from-red-900 to-transparent pointer-events-none z-[-1]" />
     </main>
   );
