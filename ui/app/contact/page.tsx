@@ -2,6 +2,7 @@
 
 import { Mail, Bug, Flame } from 'lucide-react';
 import Link from 'next/link';
+import Footer from "@/components/Footer";
 
 export default function ContactPage() {
   return (
@@ -116,4 +117,8 @@ function ContactCard({ icon, title, email }: { icon: React.ReactNode; title: str
       </a>
     </div>
   );
+
+
+     {/* Sticky Footer */}
+          <Footer />
 }

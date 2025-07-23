@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import Footer from "@/components/Footer";
 
 export default function PhantomKeyDemo() {
   const [logVisible, setLogVisible] = useState(false);

@@ -1,12 +1,53 @@
 'use client';
 
 import Link from 'next/link';
-import { FileText, Sparkles, Flame, Shield } from 'lucide-react';
+import Image from 'next/image';
+import Footer from "@/components/Footer";
+import { Flame, Sparkles, FileText, Shield } from 'lucide-react';
+
+const posts = [
+  {
+    title: 'Launching PhantomKey: The Credential Trap Engine',
+    icon: Flame,
+    date: 'June 24, 2025',
+    excerpt:
+      'PhantomKey silently inserts fake SSH keys and passwords into attacker-accessible locations — triggering alerts when touched.',
+    slug: 'phantomkey',
+    image: '/phantomkey launch.png',
+  },
+  {
+    title: 'Deploying Honeypitch APIs in the Wild',
+    icon: Sparkles,
+    date: 'June 12, 2025',
+    excerpt:
+      'We discuss how to design fake login portals and API endpoints that fool scanners and leak attacker methods.',
+    slug: 'honeypitch',
+    image: '/honeypitchapi.png',
+  },
+  {
+    title: 'Why Deception is the Future of Threat Intel',
+    icon: FileText,
+    date: 'May 29, 2025',
+    excerpt:
+      'Static defenses fail silently. Deception introduces noise and opportunity — for defenders to observe, mislead, and dominate.',
+    slug: 'deception-future',
+    image: '/intel.png',
+  },
+  {
+    title: 'Why RedShrew? The Power of Being Underestimated',
+    icon: Shield,
+    date: 'June 27, 2025',
+    excerpt:
+      'Inspired by the short-tailed shrew, our name represents tactical misdirection, offensive defense, and striking when least expected.',
+    slug: 'why-redshrew',
+    image: '/underestimated.png',
+  },
+];
 
 export default function BlogPage() {
   return (
-    <main className="min-h-screen bg-black text-white px-6 py-24 font-sans relative overflow-hidden">
-      {/* Optional red grid background */}
+    <main className="flex flex-col min-h-screen bg-[#191418]/90 text-white font-sans relative overflow-hidden">
+      {/* Grid background */}
       <div
         className="absolute inset-0 z-0 pointer-events-none"
         style={{
@@ -15,66 +56,45 @@ export default function BlogPage() {
         }}
       />
 
-      <div className="relative z-10 max-w-4xl mx-auto space-y-20">
-        {/* Header */}
-        <header className="text-center space-y-4">
-          <h1 className="text-6xl font-extrabold text-red-500 drop-shadow-[0_0_8px_rgba(255,0,0,0.8)]">
-            RedShrew Blog
+      {/* Content wrapper */}
+      <div className="relative z-10 flex-grow px-6 py-24 w-full max-w-7xl mx-auto">
+        <header className="text-left space-y-4 mb-14">
+          <h1 className="text-5xl sm:text-6xl font-extrabold text-neutral-300">
+            The Latest RedShrew News
           </h1>
-          <p className="text-gray-300 text-lg max-w-2xl mx-auto">
+          <p className="text-gray-300 text-lg max-w-2xl">
             Tactical drops, threat analysis, and adversarial insights. We publish what others redact.
           </p>
         </header>
 
-        {/* Posts */}
-        <section className="space-y-8">
-          {[
-            {
-              title: 'Launching PhantomKey: The Credential Trap Engine',
-              icon: <Flame size={22} className="text-red-500" />,
-              date: 'June 24, 2025',
-              excerpt:
-                'PhantomKey silently inserts fake SSH keys and passwords into attacker-accessible locations — triggering alerts when touched.',
-              slug: 'phantomkey',
-            },
-            {
-              title: 'Deploying Honeypitch APIs in the Wild',
-              icon: <Sparkles size={22} className="text-red-500" />,
-              date: 'June 12, 2025',
-              excerpt:
-                'We discuss how to design fake login portals and API endpoints that fool scanners and leak attacker methods.',
-              slug: 'honeypitch',
-            },
-            {
-              title: 'Why Deception is the Future of Threat Intel',
-              icon: <FileText size={22} className="text-red-500" />,
-              date: 'May 29, 2025',
-              excerpt:
-                'Static defenses fail silently. Deception introduces noise and opportunity — for defenders to observe, mislead, and dominate.',
-              slug: 'deception-future',
-            },
-            {
-              title: 'Why RedShrew? The Power of Being Underestimated',
-              icon: <Shield size={22} className="text-red-500" />,
-              date: 'June 27, 2025',
-              excerpt:
-                'Inspired by the short-tailed shrew, our name represents tactical misdirection, offensive defense, and striking when least expected.',
-              slug: 'why-redshrew',
-            },
-          ].map(({ title, icon, date, excerpt, slug }) => (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+          {posts.map(({ title, icon: Icon, date, excerpt, slug, image }) => (
             <Link href={`/blog/${slug}`} key={slug}>
-              <article className="bg-zinc-900 border border-red-500 p-6 rounded-xl hover:shadow-red-500/20 hover:bg-zinc-800 transition-all">
-                <div className="flex items-center gap-3 mb-2 text-sm text-gray-400">
-                  {icon}
-                  <span>{date}</span>
+              <article className="bg-zinc-900 border border-zinc-800 rounded-xl overflow-hidden shadow hover:shadow-red-500/30 transition-all">
+                <div className="relative h-48 w-full">
+                  <Image
+                    src={image}
+                    alt={title}
+                    fill
+                    className="object-cover"
+                  />
                 </div>
-                <h2 className="text-xl font-bold text-white mb-2">{title}</h2>
-                <p className="text-sm text-gray-300">{excerpt}</p>
+                <div className="p-5">
+                  <div className="flex items-center gap-2 text-sm text-red-400 mb-1">
+                    <Icon className="w-4 h-4" />
+                    <span>{date}</span>
+                  </div>
+                  <h2 className="text-lg font-semibold mb-1 text-white">{title}</h2>
+                  <p className="text-sm text-gray-400 line-clamp-3">{excerpt}</p>
+                </div>
               </article>
             </Link>
           ))}
-        </section>
+        </div>
       </div>
+
+      {/* Sticky Footer */}
+      <Footer />
     </main>
   );
 }

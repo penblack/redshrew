@@ -139,7 +139,7 @@ export default function Header() {
         <div className="hidden md:flex items-center gap-4 ml-12">
           <Link
             href="/demo"
-            className="border border-red-500 text-neutral-200 hover:bg-red-600 hover:text-white transition-colors px-4 py-2 rounded-md text-sm font-medium"
+            className="border border-red-900 text-neutral-200 hover:shrewombre2 hover:text-white transition-colors px-4 py-2 rounded-md text-sm font-medium"
           >
             Get a Demo
           </Link>

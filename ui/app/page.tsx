@@ -4,6 +4,7 @@ import Image from "next/image";
 import { useState } from "react";
 import { motion } from "framer-motion";
 import ContentCarousel from "@/components/ContentCarousel";
+import Footer from "@/components/Footer";
 import './globals.css';
 
 
@@ -111,9 +112,9 @@ export default function Home() {
           </a>
         </div>
         {/* 🖥️ MONITOR UI IMAGE */}
-        <div className="relative w-full max-w-[1100px] px-4 sm:px-12 -mt-25">
+        <div className="relative w-full max-w-[1300px] px-4 sm:px-12 -mt-25">
           <Image
-            src="/monitor2.png"
+            src="/monitor3.png"
             alt="RedShrew Suite Monitor UI"
             width={1400}
             height={900}
@@ -513,10 +514,10 @@ export default function Home() {
 
     {/* CTA Buttons */}
     <div className="flex flex-wrap items-center justify-center gap-6">
-      <a href="/signup" className="bg-red-700 hover:bg-red-500 text-white font-bold px-8 py-3 rounded-full shadow-lg text-lg">
+      <a href="/signup" className="bg-red-800 hover:bg-red-700 text-white font-bold px-8 py-3 rounded-full shadow-lg text-lg">
         CREATE REDSHREW ACCOUNT
       </a>
-      <a href="/platforms" className="border-2 border-red-500 text-white hover:bg-red-700 hover:text-white px-8 py-3 rounded-full shadow text-lg font-bold">
+      <a href="/platforms" className="border-2 border-red-700 text-white hover:shrewombre hover:text-white px-8 py-3 rounded-full shadow text-lg font-bold">
         SEE ALL PLATFORMS
       </a>
     </div>
@@ -577,11 +578,11 @@ export default function Home() {
         I want to receive monthly threat briefings and RedShrew updates. Unsubscribe anytime.
       </label>
       <p className="text-xs text-neutral-500 mt-2">
-        By submitting, you agree to our <a href="/privacy" className="underline hover:text-red-400">privacy policy</a>.
+        By submitting, you agree to our <a href="https://policies.google.com/privacy" className="underline hover:text-red-400">privacy policy</a>.
       </p>
       <button
         type="submit"
-        className="mt-2 bg-red-700 hover:bg-red-600 text-white font-bold py-2 rounded-lg shadow transition-colors"
+        className="mt-2 bg-neutral-600 hover:shrewombre text-white font-bold py-2 rounded-lg shadow transition-colors"
       >
         SIGN UP
       </button>
@@ -598,21 +599,21 @@ export default function Home() {
  
   <div className="relative z-10 flex flex-col items-center max-w-3xl mx-auto text-center px-4">
     <h2 className="text-3xl sm:text-4xl font-extrabold text-white mb-4">
-      Fix it, don’t just observe it.
+      Take action, don’t just observe it.
     </h2>
     <p className="text-lg text-neutral-300 mb-8">
-      Deploy the only deception platform that empowers defenders to <span className="text-red-500 font-bold">catch, mislead, and study adversaries</span> without slowing down real operations.
+      Deploy the only deception platform that empowers defenders to <span className="text-red-800 font-bold">catch, mislead, and study adversaries</span> without slowing down real operations.
     </p>
     <div className="flex flex-wrap gap-4 items-center justify-center">
       <a
         href="/demo"
-        className="bg-neutral-200 hover:bg-red-500 text-black font-bold px-8 py-3 rounded-full shadow-lg text-lg transition-colors"
+        className="bg-neutral-300 hover:shrewombre text-black font-bold px-8 py-3 rounded-full shadow-lg text-lg transition-colors"
       >
         TRY REDSHREW FOR FREE
       </a>
       <a
         href="/suite"
-        className="border-2 border-red-500 text-white hover:shrewombre hover:text-white px-8 py-3 rounded-full shadow text-lg font-bold transition-colors"
+        className="border-2 border-red-900 text-white hover:shrewombre2 hover:text-white px-8 py-3 rounded-full shadow text-lg font-bold transition-colors"
       >
         EXPLORE OUR SUITE
       </a>
@@ -625,9 +626,7 @@ export default function Home() {
 
 
       {/* Footer */}
-      <footer className="py-12 px-6 text-center text-neutral-500 text-sm">
-        &copy; {new Date().getFullYear()} RedShrew. All rights reserved.
-      </footer>
+      <Footer />
     </main>
   );
 }

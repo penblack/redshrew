@@ -1,6 +1,7 @@
 'use client';
 
 import { ShieldCheck, KeyRound, Eye } from 'lucide-react';
+import Footer from "@/components/Footer";
 
 export default function PlaybookPage() {
   return (

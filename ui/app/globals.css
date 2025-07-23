@@ -58,3 +58,12 @@ body {
   background: linear-gradient(90deg, #a11b25 0%, #e4757a 100%);
   color: #fff !important; /* ensures text stays readable */
 }
+
+.shrewombre2 {
+  background: linear-gradient(90deg, #570c11 0%, #8a3e44 100%);
+}
+
+.hover\:shrewombre2:hover {
+  background: linear-gradient(90deg, #570c11 0%, #8a3e44 100%);
+  color: #fff !important; /* ensures text stays readable */
+}

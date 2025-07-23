@@ -3,6 +3,7 @@
 
 import { useState } from 'react';
 import Image from 'next/image';
+import Footer from "@/components/Footer";
 
 const codeExamples: Record<string, { cmd: string; init: string }> = {
   'Next.js': {

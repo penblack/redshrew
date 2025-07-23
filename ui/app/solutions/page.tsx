@@ -1,6 +1,7 @@
 'use client';
 
 import { KeyRound, Eye, ShieldCheck, ShieldAlert, Waypoints } from 'lucide-react';
+import Footer from "@/components/Footer";
 
 export default function SolutionsPage() {
   return (
