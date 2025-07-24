@@ -1,8 +1,17 @@
-'use client';
+import Link from 'next/link';
+import { ArrowLeft } from 'lucide-react';
 
-export default function PhantomKeyPost() {
+export default function DeceptionFuturePost() {
   return (
     <main className="min-h-screen bg-black text-white px-6 py-24 font-sans max-w-3xl mx-auto space-y-12">
+      {/* ← Back to Blog Home */}
+      <Link
+        href="/blog"
+        className="inline-flex items-center text-red-400 hover:text-red-300"
+      >
+        <ArrowLeft className="mr-2 h-5 w-5" />
+        Back to Blog Home
+      </Link>
       <header className="space-y-2">
         <h1 className="text-4xl font-bold text-red-500 drop-shadow-[0_0_5px_rgba(255,0,0,0.5)]">
           Launching PhantomKey: The Credential Trap Engine

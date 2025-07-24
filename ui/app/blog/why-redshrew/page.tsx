@@ -1,10 +1,17 @@
-'use client';
+import Link from 'next/link';
+import { ArrowLeft } from 'lucide-react';
 
-//import { EyeOff } from 'lucide-react';
-
-export default function WhyRedShrewBlog() {
+export default function DeceptionFuturePost() {
   return (
-    <main className="min-h-screen bg-black text-white px-6 py-24 font-sans relative overflow-hidden">
+    <main className="min-h-screen bg-black text-white px-6 py-24 font-sans max-w-3xl mx-auto space-y-12">
+      {/* ← Back to Blog Home */}
+      <Link
+        href="/blog"
+        className="inline-flex items-center text-red-400 hover:text-red-300"
+      >
+        <ArrowLeft className="mr-2 h-5 w-5" />
+        Back to Blog Home
+      </Link>
       {/* Red grid background */}
       <div
         className="absolute inset-0 z-0 pointer-events-none"
