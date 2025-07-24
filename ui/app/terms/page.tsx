@@ -1,6 +1,5 @@
 "use client";
 
-import Link from 'next/link';
 import Image from 'next/image';
 import Footer from '@/components/Footer';
 
@@ -71,7 +70,7 @@ export default function TermsPage() {
             <h2 className="text-2xl font-semibold text-white">Scope & Orders</h2>
             <p>
               You may purchase subscriptions to the Service via online registration, order form, or other ordering
-              document (each, an "Order"). This Agreement governs your use of the Service purchased in any Order.
+              document (each, an &quot;Order&quot;). This Agreement governs your use of the Service purchased in any Order.
               The Effective Date is the earlier of your first access or the date of your first Order. We may update this
               Agreement from time to time; updates take effect on renewal or a new Order, and continued use constitutes
               acceptance.
@@ -91,7 +90,7 @@ export default function TermsPage() {
           <section id="data-and-security" className="space-y-4 text-neutral-200">
             <h2 className="text-2xl font-semibold text-white">Data &amp; Security</h2>
             <p>
-              You control what data ("Service Data") you send into the Service and represent you have all necessary
+              You control what data (&quot;Service Data&quot;) you send into the Service and represent you have all necessary
               rights. We process and display your data to provide and improve the Service, and may aggregate
               anonymized data for analytics. Our Data Processing Addendum and Privacy Policy govern personal data,
               and we adhere to industry-standard security practices.
@@ -126,7 +125,7 @@ export default function TermsPage() {
           <section id="disclaimers-and-limitation" className="space-y-4 text-neutral-200">
             <h2 className="text-2xl font-semibold text-white">Disclaimers &amp; Liability</h2>
             <p>
-              The Service is provided "AS IS" without warranty. Except for liability arising from death or personal
+              The Service is provided &quot;AS IS&quot; without warranty. Except for liability arising from death or personal
               injury, or your breach of use restrictions, our total liability is limited to amounts paid by you in the
               prior 12 months.
             </p>
