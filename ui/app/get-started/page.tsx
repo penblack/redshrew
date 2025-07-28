@@ -205,13 +205,13 @@ export default function GetStartedPage() {
     <div className="text-neutral-300 mb-6">Next-gen deception for modern defenders.</div>
     <div className="flex gap-4 justify-center">
       <a
-        href="/demo"
+        href="/get-started"
         className="bg-red-600 hover:bg-red-500 text-white font-bold px-8 py-3 rounded-full shadow-lg text-lg transition-colors"
       >
         TRY REDSHREW FOR FREE
       </a>
       <a
-        href="/get-started"
+        href="/demo"
         className="border-2 border-red-400 text-white hover:bg-red-700 hover:text-white px-8 py-3 rounded-full shadow text-lg font-bold transition-colors"
       >
         GET STARTED

@@ -514,7 +514,7 @@ export default function Home() {
 
     {/* CTA Buttons */}
     <div className="flex flex-wrap items-center justify-center gap-6">
-      <a href="/signup" className="bg-red-800 hover:bg-red-700 text-white font-bold px-8 py-3 rounded-full shadow-lg text-lg">
+      <a href="/get-started" className="bg-red-800 hover:bg-red-700 text-white font-bold px-8 py-3 rounded-full shadow-lg text-lg">
         CREATE REDSHREW ACCOUNT
       </a>
       <a href="/platforms" className="border-2 border-red-700 text-white hover:shrewombre hover:text-white px-8 py-3 rounded-full shadow text-lg font-bold">

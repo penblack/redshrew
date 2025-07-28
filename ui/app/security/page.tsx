@@ -61,7 +61,7 @@ export default function SecurityPage() {
           <section id="infrastructure-and-network-security" className="space-y-4 text-neutral-200">
             <h2 className="text-2xl font-semibold text-white">Infrastructure and Network Security</h2>
             <h3 className="text-xl font-medium text-[#e4757a]">Physical Access Control</h3>
-            <p>RedShrew is hosted on Google Cloud Platform, benefiting from Google's state-of-the-art data center security, including multi-factor electronic access controls, surveillance systems with 24/7 monitoring, perimeter fencing and biometric verification, and intrusion detection systems. RedShrew personnel have no physical access to Google’s data centers.</p>
+            <p>RedShrew is hosted on Google Cloud Platform, benefiting from Google&apos;s state-of-the-art data center security, including multi-factor electronic access controls, surveillance systems with 24/7 monitoring, perimeter fencing and biometric verification, and intrusion detection systems. RedShrew personnel have no physical access to Google&rsquo;s data centers.</p>
             <h3 className="text-xl font-medium text-[#e4757a]">Logical Access Control</h3>
             <p>RedShrew infrastructure access is restricted to authorized team members via secure two-factor authenticated VPNs. Server access requires unique private keys securely stored in encrypted storage.</p>
             <h3 className="text-xl font-medium text-[#e4757a]">Penetration Testing</h3>
@@ -75,7 +75,7 @@ export default function SecurityPage() {
           <section id="business-continuity-and-disaster-recovery" className="space-y-4 text-neutral-200">
             <h2 className="text-2xl font-semibold text-white">Business Continuity and Disaster Recovery</h2>
             <h3 className="text-xl font-medium text-[#e4757a]">High Availability</h3>
-            <p>RedShrew's infrastructure is designed with redundancy to ensure continuous availability. Regular maintenance is performed seamlessly without impacting platform uptime.</p>
+            <p>RedShrew&apos;s infrastructure is designed with redundancy to ensure continuous availability. Regular maintenance is performed seamlessly without impacting platform uptime.</p>
             <h3 className="text-xl font-medium text-[#e4757a]">Business Continuity</h3>
             <p>Encrypted hourly backups of all customer data are securely stored across multiple geographical regions. These backups facilitate rapid restoration in rare cases of primary data loss.</p>
             <h3 className="text-xl font-medium text-[#e4757a]">Disaster Recovery</h3>
@@ -85,7 +85,7 @@ export default function SecurityPage() {
           <section id="data-flow" className="space-y-4 text-neutral-200">
             <h2 className="text-2xl font-semibold text-white">Data Flow</h2>
             <h3 className="text-xl font-medium text-[#e4757a]">Data into System</h3>
-            <p>RedShrew's sensors securely transmit detection events via encrypted channels. We strongly encourage proactive scrubbing of sensitive data and offer customizable scrubbing tools within our SDKs, recommending filters for passwords and secret keys, credit card numbers, session cookies, and authentication headers.</p>
+            <p>RedShrew&apos;s sensors securely transmit detection events via encrypted channels. We strongly encourage proactive scrubbing of sensitive data and offer customizable scrubbing tools within our SDKs, recommending filters for passwords and secret keys, credit card numbers, session cookies, and authentication headers.</p>
             <h3 className="text-xl font-medium text-[#e4757a]">Data through System</h3>
             <p>Data transmission to RedShrew occurs exclusively via encrypted HTTPS/TLS connections, and data remains AES-256 encrypted both in transit and at rest.</p>
             <h3 className="text-xl font-medium text-[#e4757a]">Data out of System</h3>
@@ -111,7 +111,7 @@ export default function SecurityPage() {
             <h3 className="text-xl font-medium text-[#e4757a]">Single Sign-On (SSO) and SAML 2.0</h3>
             <p>RedShrew offers robust SSO and SAML 2.0 integrations, supporting streamlined authentication and automated account provisioning with providers like Azure Active Directory and Okta.</p>
             <h3 className="text-xl font-medium text-[#e4757a]">REST API Authentication</h3>
-            <p>RedShrew's REST APIs rely on secure authentication tokens, strongly recommending organization-wide tokens for optimal security.</p>
+            <p>All data stored in RedShrew&rsquo;s systems is encrypted at rest using Google&rsquo;s globally redundant Key Management Service. Encrypted data ensures robust security even in the unlikely event of physical breaches.</p>
           </section>
 
           <section id="email-security" className="space-y-4 text-neutral-200">
