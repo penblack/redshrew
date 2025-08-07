@@ -56,7 +56,7 @@ export default function PhantomKeyDemo() {
       <div className="relative z-10 max-w-4xl mx-auto space-y-12">
         {/* Header */}
         <header className="text-center space-y-4">
-          <h1 className="text-5xl font-extrabold text-red-500 drop-shadow-[0_0_8px_rgba(255,0,0,0.8)]">
+          <h1 className="text-5xl font-extrabold" style={{ color: "#e4757a" }}>
             PhantomKey Demo
           </h1>
           <p className="text-gray-300 text-lg">
