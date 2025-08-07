@@ -221,10 +221,11 @@ export default function PlatformsPage() {
                     </button>
                   </div>
 
-                  {/* One-liner explanation */}
-                  <p className="text-xs text-neutral-500 mb-4">
-                    <span className="italic">// Installs deception traps and sends activity to your analyst dashboard.</span>
-                  </p>
+                  {/* One-liner: Installs deception traps and sends activity to your analyst dashboard. */}
+<p className="text-xs italic text-neutral-500 mb-4">
+  Installs deception traps and sends activity to your analyst dashboard.
+</p>
+
                 </>
               )}
 
