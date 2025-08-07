@@ -1,0 +1,41 @@
+return (
+    <main className="relative flex flex-col min-h-screen bg-black text-white overflow-hidden">
+      {/* --- Curved Wavy Grid SVG Background --- */}
+      <svg
+        className="absolute inset-0 w-full h-full z-0 pointer-events-none"
+        viewBox="0 0 1440 800"
+        fill="none"
+        aria-hidden="true"
+        preserveAspectRatio="none"
+      >
+        <defs>
+          <linearGradient id="gridline" x1="0" y1="0" x2="0" y2="1">
+            <stop stopColor="rgba(231,20,35,1)" stopOpacity="0.2" />
+            <stop offset="1" stopColor="rgba(231,20,35,1)" stopOpacity="0.1" />
+          </linearGradient>
+        </defs>
+        {/* Horizontal waves */}
+        {[...Array(16)].map((_, i) => (
+          <path
+            key={`h${i}`}
+            d={
+              `M 0 ${50 * i + 20} C 400 ${40 * i + 60}, 1040 ${60 * i + 10}, 1440 ${50 * i + 30}`
+            }
+            stroke="url(#gridline)"
+            strokeWidth="1"
+            fill="none"
+          />
+        ))}
+        {/* Vertical waves */}
+        {[...Array(13)].map((_, i) => (
+          <path
+            key={`v${i}`}
+            d={
+              `M ${120 * i} 0 C ${110 * i} 300, ${140 * i} 500, ${120 * i} 800`
+            }
+            stroke="url(#gridline)"
+            strokeWidth="1"
+            fill="none"
+          />
+        ))}
+      </svg>
