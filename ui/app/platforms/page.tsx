@@ -223,7 +223,6 @@ export default function PlatformsPage() {
 
                   {/* One-liner explanation */}
                   <p className="text-xs text-neutral-500 mb-4">
-                    {/* comment style for devs */}
                     <span className="italic">// Installs deception traps and sends activity to your analyst dashboard.</span>
                   </p>
                 </>
