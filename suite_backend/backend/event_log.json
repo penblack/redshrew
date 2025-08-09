@@ -66,5 +66,20 @@
         "ssh"
       ]
     }
+  },
+  {
+    "timestamp": "2025-08-07T21:28:26.834364Z",
+    "tool": "phantomkey",
+    "action": "generate_skeletons",
+    "status": "ok",
+    "metadata": {
+      "count": 3,
+      "types": [
+        "aws",
+        "github",
+        "ssh"
+      ],
+      "dir": "/workspaces/redshrew/suite_backend/backend/fake_skeletons"
+    }
   }
 ]

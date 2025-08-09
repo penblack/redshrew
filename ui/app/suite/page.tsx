@@ -3,9 +3,19 @@
 import { useEffect, useState } from 'react';
 import { ShieldAlert, TerminalSquare, Eye, Cloud, Settings } from 'lucide-react';
 
+type GeneratedSkeleton = {
+  type: string;
+  filename: string;
+  path: string;
+  value: string;
+  created_at: string;
+  tracking_bit: string;
+  canary_url: string;
+};
+
 type PhantomStatus = {
   status?: string;
-  generated?: string[];
+  generated?: GeneratedSkeleton[];
   error?: string;
 } | null;
 
@@ -38,57 +48,72 @@ export default function CommandCenter() {
   const [eventLogs, setEventLogs] = useState<EventLog[]>([]);
   const [systemStatus, setSystemStatus] = useState<SystemStatus>(null);
 
-  const handlePhantomKeyStart = async () => {
-    try {
-      const response = await fetch('/api/phantomkey/start', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ fake_skeleton: ['API_KEY_XYZ', 'TOKEN_ABC'] }),
-      });
-      const data = await response.json();
-      setPhantomStatus(data);
-    } catch (error) {
-      console.error('Error calling PhantomKey:', error);
-      setPhantomStatus({ error: 'Failed to connect to backend' });
-    }
-  };
+const handlePhantomKeyStart = async () => {
+  try {
+    const res = await fetch('/api/phantomkey/start', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ fake_skeletons: ['aws', 'github', 'ssh'] }),
+    });
 
-  const handleHoneyPitchStart = async () => {
-    try {
-      const response = await fetch('/api/honeypitch/start', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-      });
-      const data = await response.json();
-      setHoneyPitchStatus(data);
-    } catch (error) {
-      console.error('Error calling HoneyPitch:', error);
-      setHoneyPitchStatus({ error: 'Failed to connect to backend' });
-    }
-  };
+    // safe parse + status check
+    const data = await res.json().catch(() => null);
+    if (!res.ok || !data) throw new Error(`HTTP ${res.status}`);
 
-  useEffect(() => {
-    if (activeTab === 'dashboard') {
-      fetch('/api/status')
-        .then((res) => res.json())
-        .then((data) => setSystemStatus(data))
-        .catch(() => setSystemStatus(null));
-    } else if (activeTab === 'events') {
-      fetch('/api/observer/logs')
-        .then((res) => res.json())
-        .then((data: EventLog[]) => setEventLogs(data))
-        .catch(() =>
-          setEventLogs([
-            {
-              timestamp: new Date().toISOString(),
-              tool: 'Observer',
-              action: 'Fetch Logs',
-              status: 'Failed to fetch logs',
-            },
-          ])
-        );
-    }
-  }, [activeTab]);
+    setPhantomStatus(data);
+  } catch (err) {
+    console.error('Error calling PhantomKey:', err);
+    setPhantomStatus({ error: 'Failed to connect to backend' });
+  }
+};
+
+
+const handleHoneyPitchStart = async () => {
+  try {
+    const res = await fetch('/api/honeypitch/start', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+    });
+
+    // safe parse + status check
+    const data = await res.json().catch(() => null);
+    if (!res.ok || !data) throw new Error(`HTTP ${res.status}`);
+
+    setHoneyPitchStatus(data);
+  } catch (err) {
+    console.error('Error calling HoneyPitch:', err);
+    setHoneyPitchStatus({ error: 'Failed to connect to backend' });
+  }
+};
+
+useEffect(() => {
+  if (activeTab === 'dashboard') {
+    fetch('/api/status')
+      .then(async (res) => {
+        const data = await res.json().catch(() => null);
+        if (!res.ok || !data) throw new Error('bad status');
+        setSystemStatus(data);
+      })
+      .catch(() => setSystemStatus(null));
+  } else if (activeTab === 'events') {
+    fetch('/api/observer/logs')
+      .then(async (res) => {
+        const data = (await res.json().catch(() => null)) as EventLog[] | null;
+        if (!res.ok || !data) throw new Error('bad logs');
+        setEventLogs(data);
+      })
+      .catch(() =>
+        setEventLogs([
+          {
+            timestamp: new Date().toISOString(),
+            tool: 'Observer',
+            action: 'Fetch Logs',
+            status: 'Failed to fetch logs',
+          },
+        ])
+      );
+  }
+}, [activeTab]);
 
   return (
     <main className="min-h-screen bg-black text-white font-sans p-6">

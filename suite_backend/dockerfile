@@ -1,0 +1,21 @@
+FROM python:3.12-slim
+
+# system deps (optional but handy)
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    curl ca-certificates && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /app
+
+# install deps first (leverages Docker layer cache)
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt gunicorn
+
+# app code
+COPY . .
+
+# Render will set $PORT at runtime; default to 5001 locally
+ENV PORT=5001
+EXPOSE 5001
+
+# IMPORTANT: bind to 0.0.0.0:$PORT
+CMD ["sh", "-c", "gunicorn -b 0.0.0.0:${PORT:-5001} --workers 3 --threads 2 --timeout 60 app:app"]
