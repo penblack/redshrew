@@ -12,16 +12,15 @@ import {
   Cell,
 } from "recharts";
 
-// TEMP: Recharts TS workaround for Next.js + TS
-const ResponsiveContainerC = ResponsiveContainer as unknown as React.ComponentType<any>;
-const LineChartC = LineChart as unknown as React.ComponentType<any>;
-const LineC = Line as unknown as React.ComponentType<any>;
-const XAxisC = RechartsXAxis as unknown as React.ComponentType<any>;
-const YAxisC = RechartsYAxis as unknown as React.ComponentType<any>;
-const TooltipC = Tooltip as unknown as React.ComponentType<any>;
-const PieChartC = PieChart as unknown as React.ComponentType<any>;
-const PieC = Pie as unknown as React.ComponentType<any>;
-const CellC = Cell as unknown as React.ComponentType<any>;
+// TEMP: Recharts TS workaround for Next.js + TS (no 'any')
+type LooseProps = Record<string, unknown>;
+const ResponsiveContainerC = ResponsiveContainer as unknown as React.ComponentType<LooseProps>;
+const LineChartC = LineChart as unknown as React.ComponentType<LooseProps>;
+const LineC = Line as unknown as React.ComponentType<LooseProps>;
+const XAxisC = RechartsXAxis as unknown as React.ComponentType<LooseProps>;
+const YAxisC = RechartsYAxis as unknown as React.ComponentType<LooseProps>;
+const TooltipC = Tooltip as unknown as React.ComponentType<LooseProps>;
+
 
 
 const API_BASE = process.env.NEXT_PUBLIC_REDSHREW_API_BASE || "https://api.redshrew.com/api";
@@ -433,10 +432,14 @@ function fmtDuration(sec: number | null | undefined) {
   return `${s}s`;
 }
 
-function labelFromSkeleton(skel: GeneratedKey | any) {
-  if (!skel) return "—";
-  return skel.type || skel.name || skel.provider || "—";
+function isKeyLike(x: unknown): x is { type?: string; name?: string; provider?: string } {
+  return !!x && typeof x === "object";
 }
+function labelFromSkeleton(skel: unknown) {
+  if (!isKeyLike(skel)) return "—";
+  return skel.type ?? skel.name ?? skel.provider ?? "—";
+}
+
 
 function fullURL(path: string) {
   if (!path) return "";
