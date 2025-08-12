@@ -103,16 +103,15 @@ def track_phantomkey(tracking_id):
     # mark use
     entry["used"] = used + 1
 
-    # ---- NEW: record event for dashboard/logs ----
+    # ---- record event for dashboard/logs ----
     try:
         ip = request.headers.get("X-Forwarded-For", request.remote_addr)
-        # if multiple IPs (proxy list), take first
         if isinstance(ip, str) and "," in ip:
             ip = ip.split(",")[0].strip()
     except Exception:
         ip = None
 
-      evt = {
+    evt = {
         "event": "phantomkey.bit_triggered",
         "tracking_id": tracking_id,
         "skeleton": entry.get("skeleton", {}),
@@ -120,28 +119,26 @@ def track_phantomkey(tracking_id):
         "max_uses": max_uses,
         "ts": now,
         "ip": ip,
-        "created_ts": entry.get("skeleton", {}).get("created_ts"),  # <-- NEW
+        "created_ts": entry.get("skeleton", {}).get("created_ts"),
     }
-
     try:
         current_app.phantomkey_events.append(evt)
-    except Exception as _:
+    except Exception:
         pass
-    # ---- END NEW ----
+    # ---- end record ----
 
     # fire signed webhook if configured
     webhook_url = entry.get("webhook_url")
     if webhook_url:
-                payload = {
+        payload = {
             "event": "phantomkey.bit_triggered",
             "tracking_id": tracking_id,
             "skeleton": entry.get("skeleton", {}),
             "used": entry["used"],
             "max_uses": max_uses,
             "ts": now,
-            "created_ts": entry.get("skeleton", {}).get("created_ts"),  # <-- NEW
+            "created_ts": entry.get("skeleton", {}).get("created_ts"),
         }
-
         body = json.dumps(payload).encode("utf-8")
         headers = {"Content-Type": "application/json"}
         sig = _sign(body)
@@ -150,7 +147,6 @@ def track_phantomkey(tracking_id):
         try:
             requests.post(webhook_url, data=body, headers=headers, timeout=5)
         except Exception as e:
-            # keep serving even if webhook destination fails
             print(f"[PHANTOMKEY] Webhook notification failed: {e}")
 
     print(f"[PHANTOMKEY] bit {tracking_id} triggered (use {entry['used']}/{max_uses})")
@@ -160,6 +156,7 @@ def track_phantomkey(tracking_id):
         "used": entry["used"],
         "max_uses": max_uses
     }), 200
+
     
 @phantomkey_bp.route("/phantomkey/status/<tracking_id>", methods=["GET"])
 def phantom_status(tracking_id):
