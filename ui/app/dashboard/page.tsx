@@ -6,20 +6,26 @@ import {
   XAxis as RechartsXAxis,
   YAxis as RechartsYAxis,
   Tooltip,
+  Legend,
   ResponsiveContainer,
   PieChart,
   Pie,
   Cell,
 } from "recharts";
 
-// TEMP: Recharts TS workaround for Next.js + TS (no 'any')
-type LooseProps = Record<string, unknown>;
-const ResponsiveContainerC = ResponsiveContainer as unknown as React.ComponentType<LooseProps>;
-const LineChartC = LineChart as unknown as React.ComponentType<LooseProps>;
-const LineC = Line as unknown as React.ComponentType<LooseProps>;
-const XAxisC = RechartsXAxis as unknown as React.ComponentType<LooseProps>;
-const YAxisC = RechartsYAxis as unknown as React.ComponentType<LooseProps>;
-const TooltipC = Tooltip as unknown as React.ComponentType<LooseProps>;
+// TEMP: Recharts TS workaround for Next.js + TS
+type AnyComponent = React.ComponentType<any>;
+const ResponsiveContainerC = ResponsiveContainer as unknown as AnyComponent;
+const LineChartC = LineChart as unknown as AnyComponent;
+const LineC = Line as unknown as AnyComponent;
+const XAxisC = RechartsXAxis as unknown as AnyComponent;
+const YAxisC = RechartsYAxis as unknown as AnyComponent;
+const TooltipC = Tooltip as unknown as AnyComponent;
+const LegendC = Legend as unknown as AnyComponent;
+const PieChartC = PieChart as unknown as AnyComponent;
+const PieC = Pie as unknown as AnyComponent;
+const CellC = Cell as unknown as AnyComponent;
+
 
 
 
@@ -227,14 +233,19 @@ export default function RedShrewDashboard() {
         <section className="col-span-12 lg:col-span-8 p-4 rounded-2xl border border-red-900/40 bg-neutral-900/40 shadow">
           <h3 className="text-sm font-semibold text-neutral-300 mb-3">Triggers • last 24h</h3>
           <div className="h-64">
-            <ResponsiveContainerC width="100%" height="100%">
+           <ResponsiveContainerC width="100%" height="100%">
   <LineChartC data={timeSeries} margin={{ left: 8, right: 8, top: 8, bottom: 8 }}>
     <XAxisC dataKey="name" hide={false} tick={{ fill: "#a3a3a3", fontSize: 12 }} />
     <YAxisC allowDecimals={false} tick={{ fill: "#a3a3a3", fontSize: 12 }} />
-    <TooltipC contentStyle={{ background: "#111", border: "1px solid #4c0519", color: "#fff" }} />
+    <TooltipC
+      contentStyle={{ background: "#111", border: "1px solid #4c0519", color: "#fff" }}
+      labelStyle={{ color: "#fff" }}
+      itemStyle={{ color: "#fff" }}
+    />
     <LineC type="monotone" dataKey="count" stroke="#ef4444" strokeWidth={2} dot={false} />
   </LineChartC>
 </ResponsiveContainerC>
+
 
 
           </div>
@@ -244,14 +255,39 @@ export default function RedShrewDashboard() {
           <h3 className="text-sm font-semibold text-neutral-300 mb-3">Top Skeletons</h3>
           <div className="h-64">
             <ResponsiveContainer width="100%" height="100%">
-              <PieChart>
-                <Pie data={donutData} dataKey="value" nameKey="name" innerRadius={50} outerRadius={80} stroke="#111827">
-                  {donutData.map((_, i) => (
-                    <Cell key={i} fill={["#ef4444", "#f97316", "#f59e0b", "#22c55e", "#3b82f6", "#a855f7"][i % 6]} />
-                  ))}
-                </Pie>
-                <Tooltip contentStyle={{ background: "#111", border: "1px solid #4c0519", color: "#fff" }} />
-              </PieChart>
+              <PieChartC margin={{ top: 8, right: 8, bottom: 8, left: 8 }}>
+  <PieC
+    data={donutData}
+    dataKey="value"
+    nameKey="name"
+    innerRadius={50}
+    outerRadius={80}
+    stroke="#111827"
+  >
+    {donutData.map((_, i) => (
+      <CellC
+        key={i}
+        fill={["#ef4444", "#f97316", "#f59e0b", "#22c55e", "#3b82f6", "#a855f7"][i % 6]}
+      />
+    ))}
+  </PieC>
+
+  <LegendC
+    verticalAlign="bottom"
+    align="center"
+    iconType="circle"
+    height={28}
+    wrapperStyle={{ color: "#e5e7eb", fontSize: 12 }}
+  />
+
+  <TooltipC
+    contentStyle={{ background: "#111", border: "1px solid #4c0519", color: "#fff" }}
+    labelStyle={{ color: "#fff" }}
+    itemStyle={{ color: "#fff" }}
+  />
+</PieChartC>
+
+
             </ResponsiveContainer>
           </div>
         </section>
