@@ -12,6 +12,14 @@ import requests
 from backend.services.phantomkey import generate_fake_skeletons
 
 phantomkey_bp = Blueprint("phantomkey", __name__)
+@phantomkey_bp.before_app_request
+def ensure_tracking_store():
+    # In-memory stores
+    if not hasattr(current_app, "phantomkey_tracking"):
+        current_app.phantomkey_tracking = {}
+    if not hasattr(current_app, "phantomkey_events"):
+        current_app.phantomkey_events = deque(maxlen=500)
+
 
 # Secret used to sign outbound webhooks
 WEBHOOK_SECRET = os.environ.get("PHANTOMKEY_WEBHOOK_SECRET", "")
@@ -22,6 +30,54 @@ def _sign(body: bytes) -> str:
         return ""
     mac = hmac.new(WEBHOOK_SECRET.encode("utf-8"), body, hashlib.sha256).hexdigest()
     return f"sha256={mac}"
+
+@phantomkey_bp.route("/phantomkey/start", methods=["POST"])
+def start_phantomkey():
+    """
+    Body example:
+    {
+      "fake_skeletons": ["aws","github","ssh"],
+      "webhook_url": "https://example.com/hook",
+      "ttl_seconds": 86400,
+      "max_uses": 1
+    }
+    """
+    cfg = request.get_json(silent=True) or {}
+
+    raw_types = cfg.get("fake_skeletons", [])
+    skeleton_types = [
+        t if isinstance(t, str) else (t.get("type") if isinstance(t, dict) else None)
+        for t in raw_types
+    ]
+    skeleton_types = [t for t in skeleton_types if t]
+
+    webhook_url = cfg.get("webhook_url")
+    ttl_seconds = int(cfg.get("ttl_seconds", 24 * 3600))  # 24h default
+    max_uses = max(1, int(cfg.get("max_uses", 1)))        # at least once
+
+    generated = generate_fake_skeletons(skeleton_types, webhook_url=None)
+
+    now = int(time.time())
+    expires_at = now + ttl_seconds if ttl_seconds > 0 else None
+
+    tracked = []
+    store = current_app.phantomkey_tracking
+    for skeleton in generated:
+        tracking_id = str(uuid.uuid4())
+        skeleton["tracking_bit"] = tracking_id
+        skeleton["canary_url"] = f"/api/phantomkey/track/{tracking_id}"
+
+        store[tracking_id] = {
+            "used": 0,
+            "max_uses": max_uses,
+            "expires_at": expires_at,
+            "skeleton": skeleton,
+            "webhook_url": webhook_url,
+        }
+        tracked.append(skeleton)
+
+    return jsonify({"status": "PhantomKey started", "generated": tracked}), 200
+
 
 @phantomkey_bp.route("/phantomkey/track/<tracking_id>", methods=["GET", "POST"])
 def track_phantomkey(tracking_id):
