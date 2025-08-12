@@ -60,12 +60,13 @@ def start_phantomkey():
     now = int(time.time())
     expires_at = now + ttl_seconds if ttl_seconds > 0 else None
 
-    tracked = []
+        tracked = []
     store = current_app.phantomkey_tracking
     for skeleton in generated:
         tracking_id = str(uuid.uuid4())
         skeleton["tracking_bit"] = tracking_id
         skeleton["canary_url"] = f"/api/phantomkey/track/{tracking_id}"
+        skeleton["created_ts"] = now  # <-- NEW: unix seconds for KPI
 
         store[tracking_id] = {
             "used": 0,
@@ -75,6 +76,7 @@ def start_phantomkey():
             "webhook_url": webhook_url,
         }
         tracked.append(skeleton)
+
 
     return jsonify({"status": "PhantomKey started", "generated": tracked}), 200
 
@@ -108,7 +110,7 @@ def track_phantomkey(tracking_id):
     except Exception:
         ip = None
 
-    evt = {
+      evt = {
         "event": "phantomkey.bit_triggered",
         "tracking_id": tracking_id,
         "skeleton": entry.get("skeleton", {}),
@@ -116,7 +118,9 @@ def track_phantomkey(tracking_id):
         "max_uses": max_uses,
         "ts": now,
         "ip": ip,
+        "created_ts": entry.get("skeleton", {}).get("created_ts"),  # <-- NEW
     }
+
     try:
         current_app.phantomkey_events.append(evt)
     except Exception as _:
@@ -126,14 +130,16 @@ def track_phantomkey(tracking_id):
     # fire signed webhook if configured
     webhook_url = entry.get("webhook_url")
     if webhook_url:
-        payload = {
+                payload = {
             "event": "phantomkey.bit_triggered",
             "tracking_id": tracking_id,
             "skeleton": entry.get("skeleton", {}),
             "used": entry["used"],
             "max_uses": max_uses,
             "ts": now,
+            "created_ts": entry.get("skeleton", {}).get("created_ts"),  # <-- NEW
         }
+
         body = json.dumps(payload).encode("utf-8")
         headers = {"Content-Type": "application/json"}
         sig = _sign(body)
