@@ -14,7 +14,8 @@ import {
 } from "recharts";
 
 // TEMP: Recharts TS workaround for Next.js + TS
-type AnyComponent = React.ComponentType<any>;
+type AnyProps = Record<string, unknown>;
+type AnyComponent = React.ComponentType<AnyProps>;
 const ResponsiveContainerC = ResponsiveContainer as unknown as AnyComponent;
 const LineChartC = LineChart as unknown as AnyComponent;
 const LineC = Line as unknown as AnyComponent;
