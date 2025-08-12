@@ -134,23 +134,39 @@ export default function RedShrewDashboard() {
     return { triggersToday, activeKeys, expired, ttt };
   }, [logs, keys]);
 
-  // Triggers by hour (last 24h) for chart
-  const timeSeries = useMemo(() => {
-    const buckets = new Map<string, number>(); // hour label -> count
-    const now = new Date();
-    for (let i = 23; i >= 0; i--) {
-      const d = new Date(now.getTime() - i * 3600 * 1000);
-      const label = `${d.getHours()}:00`;
-      buckets.set(label, 0);
-    }
-    logs.forEach((e) => {
-      if (!e.ts) return;
-      const d = new Date(e.ts * 1000);
-      const label = `${d.getHours()}:00`;
-      if (buckets.has(label)) buckets.set(label, (buckets.get(label) || 0) + 1);
-    });
-    return Array.from(buckets.entries()).map(([name, count]) => ({ name, count }));
-  }, [logs]);
+  // Triggers by time (last 24h, 10-minute buckets)
+const timeSeries = useMemo(() => {
+  const now = new Date();
+  const end = new Date(now);
+  end.setSeconds(0, 0);                       // align to the current minute
+  const endT = end.getTime();
+
+  const TEN = 10 * 60 * 1000;                 // 10 minutes in ms
+  // Start so we get a full 24h window of 10-min buckets (inclusive on the right)
+  const startT = endT - 24 * 60 * 60 * 1000 + TEN;
+
+  type Bucket = { t: number; count: number };
+  const buckets: Bucket[] = [];
+  for (let t = startT; t <= endT; t += TEN) {
+    buckets.push({ t, count: 0 });            // t = end timestamp of this 10-min bucket
+  }
+
+  // Count each event into its 10-minute bucket
+  for (const e of logs) {
+    const ets = (e?.ts ?? 0) * 1000;
+    if (!ets) continue;
+    if (ets < startT - TEN || ets > endT) continue;
+
+    // bucket ends are multiples of TEN
+    const bucketEnd = Math.ceil(ets / TEN) * TEN;
+    const idx = Math.floor((bucketEnd - startT) / TEN);
+    if (buckets[idx]) buckets[idx].count++;
+  }
+
+  return buckets;
+}, [logs]);
+
+
 
   // Distribution by skeleton type (for donut chart)
   const donutData = useMemo(() => {
@@ -234,14 +250,29 @@ export default function RedShrewDashboard() {
         <section className="col-span-12 lg:col-span-8 p-4 rounded-2xl border border-red-900/40 bg-neutral-900/40 shadow">
           <h3 className="text-sm font-semibold text-neutral-300 mb-3">Triggers • last 24h</h3>
           <div className="h-64">
-           <ResponsiveContainerC width="100%" height="100%">
+<ResponsiveContainerC width="100%" height="100%">
   <LineChartC data={timeSeries} margin={{ left: 8, right: 8, top: 8, bottom: 8 }}>
-    <XAxisC dataKey="name" hide={false} tick={{ fill: "#a3a3a3", fontSize: 12 }} />
+    <XAxisC
+      type="number"
+      dataKey="t"
+      scale="time"
+      domain={["dataMin", "dataMax"]}
+      tickFormatter={(t: number) =>
+        new Date(t).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
+      }
+      tick={{ fill: "#a3a3a3", fontSize: 12 }}
+    />
     <YAxisC allowDecimals={false} tick={{ fill: "#a3a3a3", fontSize: 12 }} />
     <TooltipC
       contentStyle={{ background: "#111", border: "1px solid #4c0519", color: "#fff" }}
-      labelStyle={{ color: "#fff" }}
-      itemStyle={{ color: "#fff" }}
+      labelFormatter={(t: number) => {
+        const TEN = 10 * 60 * 1000;
+        const from = new Date(t - TEN);
+        const to = new Date(t - 1); // show inclusive end
+        const fmt = (d: Date) => d.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+        return `${fmt(from)}–${fmt(to)}`;
+      }}
+      formatter={(value: unknown) => [`${value}`, "count"]}
     />
     <LineC type="monotone" dataKey="count" stroke="#ef4444" strokeWidth={2} dot={false} />
   </LineChartC>
