@@ -28,15 +28,26 @@ ALLOWED_ORIGINS = (
     else _default_origins
 )
 
-import os
-from redis import Redis
+import os, redis
 
-REDIS_URL = os.environ.get("REDIS_URL")  # e.g. rediss://:pass@host:port/0
-r = None
+REDIS_URL = os.environ.get("REDIS_URL")
+app.config["r"] = None
+
 if REDIS_URL:
-    # decode_responses=True -> strings in/out
-    r = Redis.from_url(REDIS_URL, decode_responses=True)
-app.config["r"] = r
+    try:
+        pool = redis.ConnectionPool.from_url(
+            REDIS_URL,
+            decode_responses=True,
+            health_check_interval=30,
+            socket_timeout=2,
+        )
+        r = redis.Redis(connection_pool=pool)
+        r.ping()  # <-- this must succeed or we don't keep r
+        app.config["r"] = r
+        print(f"[redis] connected -> {REDIS_URL}")
+    except Exception as e:
+        print(f"[redis] FAILED to connect: {e} (falling back to in-memory)")
+
 
 
 # Allow only /api/* from these origins (credentials not needed here; flip to True if you set cookies)

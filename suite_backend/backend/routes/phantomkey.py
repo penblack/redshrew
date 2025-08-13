@@ -7,10 +7,20 @@ import time
 import json
 import uuid
 import requests
+from collections import deque
+from datetime import datetime
 
 from backend.services.phantomkey import generate_fake_skeletons
 
 phantomkey_bp = Blueprint("phantomkey", __name__)
+
+@phantomkey_bp.before_app_request
+def _ensure_tracking_store():
+    if not hasattr(current_app, "phantomkey_tracking"):
+        current_app.phantomkey_tracking = {}
+    if not hasattr(current_app, "phantomkey_events"):
+        current_app.phantomkey_events = deque(maxlen=500)
+
 
 # Secret used to sign outbound webhooks
 WEBHOOK_SECRET = os.environ.get("PHANTOMKEY_WEBHOOK_SECRET", "")
@@ -22,68 +32,122 @@ def _sign(body: bytes) -> str:
     mac = hmac.new(WEBHOOK_SECRET.encode("utf-8"), body, hashlib.sha256).hexdigest()
     return f"sha256={mac}"
 
+from redis.exceptions import RedisError
+
 # -------------------------
 # Redis helpers (persistence)
 # -------------------------
+
 def _pk_key(tracking_id: str) -> str:
     return f"pk:{tracking_id}"
 
-EVENTS_KEY = "pkevents"      # list of recent events (LPUSH newest)
-EVENTS_MAX = 2000            # keep up to 2k events
+EVENTS_KEY = "pkevents"   # list of recent events (LPUSH newest)
+EVENTS_MAX = 2000         # keep up to 2k events
 
 def _r():
-    r = current_app.config.get("r")
-    if not r:
-        raise RuntimeError("Redis is not configured (REDIS_URL missing)")
-    return r
+    # Returns the live Redis client or None if not configured/disabled.
+    return current_app.config.get("r")
+
+def _disable_redis(e: Exception):
+    # If Redis errors (allowlist, timeout, etc.), drop to in-memory so UI keeps working.
+    print(f"[redis] disabling redis client due to error: {e!r}")
+    current_app.config["r"] = None
 
 def _save_pk(tracking_id: str, data: dict, ttl_seconds: int | None):
     """Save a phantom key hash and apply TTL if provided."""
     r = _r()
-    mapping = {
-        "used": int(data.get("used", 0)),
-        "max_uses": int(data.get("max_uses", 1)),
-        "expires_at": int(data.get("expires_at", 0)) if data.get("expires_at") else 0,
-        "skeleton": json.dumps(data.get("skeleton", {})),
-        "webhook_url": data.get("webhook_url") or "",
-    }
-    r.hset(_pk_key(tracking_id), mapping=mapping)
-    if ttl_seconds and ttl_seconds > 0:
-        r.expire(_pk_key(tracking_id), ttl_seconds)
+    if not r:
+        # in-memory fallback
+        current_app.phantomkey_tracking[tracking_id] = data
+        return
+    try:
+        mapping = {
+            "used": int(data.get("used", 0)),
+            "max_uses": int(data.get("max_uses", 1)),
+            "expires_at": int(data.get("expires_at", 0)) if data.get("expires_at") else 0,
+            "skeleton": json.dumps(data.get("skeleton", {})),
+            "webhook_url": data.get("webhook_url") or "",
+        }
+        r.hset(_pk_key(tracking_id), mapping=mapping)
+        if ttl_seconds and ttl_seconds > 0:
+            r.expire(_pk_key(tracking_id), ttl_seconds)
+    except RedisError as e:
+        _disable_redis(e)
+        current_app.phantomkey_tracking[tracking_id] = data
 
 def _get_pk(tracking_id: str) -> dict | None:
     r = _r()
-    h = r.hgetall(_pk_key(tracking_id))
-    if not h:
-        return None
-    return {
-        "used": int(h.get("used", 0)),
-        "max_uses": int(h.get("max_uses", 1)),
-        "expires_at": int(h.get("expires_at", 0)) or None,
-        "skeleton": json.loads(h.get("skeleton") or "{}"),
-        "webhook_url": h.get("webhook_url") or "",
-    }
+    if not r:
+        return current_app.phantomkey_tracking.get(tracking_id)
+    try:
+        h = r.hgetall(_pk_key(tracking_id))
+        if not h:
+            return None
+        return {
+            "used": int(h.get("used", 0)),
+            "max_uses": int(h.get("max_uses", 1)),
+            "expires_at": int(h.get("expires_at", 0)) or None,
+            "skeleton": json.loads(h.get("skeleton") or "{}"),
+            "webhook_url": h.get("webhook_url") or "",
+        }
+    except RedisError as e:
+        _disable_redis(e)
+        return current_app.phantomkey_tracking.get(tracking_id)
 
 def _incr_used(tracking_id: str) -> int:
     """Increase 'used' counter (not fully atomic vs max_uses; OK for MVP)."""
     r = _r()
-    return int(r.hincrby(_pk_key(tracking_id), "used", 1))
+    if not r:
+        d = current_app.phantomkey_tracking.get(tracking_id)
+        if not d:
+            return 0
+        d["used"] = int(d.get("used", 0)) + 1
+        return d["used"]
+    try:
+        return int(r.hincrby(_pk_key(tracking_id), "used", 1))
+    except RedisError as e:
+        _disable_redis(e)
+        d = current_app.phantomkey_tracking.get(tracking_id)
+        if not d:
+            return 0
+        d["used"] = int(d.get("used", 0)) + 1
+        return d["used"]
 
 def _append_event(evt: dict):
     r = _r()
-    r.lpush(EVENTS_KEY, json.dumps(evt))
-    r.ltrim(EVENTS_KEY, 0, EVENTS_MAX - 1)
+    if not r:
+        try:
+            current_app.phantomkey_events.append(evt)
+        except Exception:
+            pass
+        return
+    try:
+        r.lpush(EVENTS_KEY, json.dumps(evt))
+        r.ltrim(EVENTS_KEY, 0, EVENTS_MAX - 1)
+    except RedisError as e:
+        _disable_redis(e)
+        try:
+            current_app.phantomkey_events.append(evt)
+        except Exception:
+            pass
 
 def _get_events(limit: int = 200) -> list[dict]:
     r = _r()
-    raw = r.lrange(EVENTS_KEY, 0, max(0, limit - 1))
-    out = []
-    for s in raw:
-        try:
-            out.append(json.loads(s))
-        except Exception:
-            pass
-    return out
+    if not r:
+        return list(current_app.phantomkey_events)[-limit:]
+    try:
+        raw = r.lrange(EVENTS_KEY, 0, max(0, limit - 1))
+        out: list[dict] = []
+        for s in raw:
+            try:
+                out.append(json.loads(s))
+            except Exception:
+                pass
+        return out
+    except RedisError as e:
+        _disable_redis(e)
+        return list(current_app.phantomkey_events)[-limit:]
+
 
 # -------------------------
 # Routes
@@ -125,7 +189,8 @@ def start_phantomkey():
         tracking_id = str(uuid.uuid4())
         skeleton["tracking_bit"] = tracking_id
         skeleton["canary_url"] = f"/api/phantomkey/track/{tracking_id}"
-        skeleton["created_at"] = time.strftime("%Y-%m-%dT%H:%M:%S.%fZ", time.gmtime(now))
+        skeleton["created_at"] = datetime.utcfromtimestamp(now).strftime("%Y-%m-%dT%H:%M:%S.%fZ")
+
 
         _save_pk(
             tracking_id,
