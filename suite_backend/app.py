@@ -28,6 +28,17 @@ ALLOWED_ORIGINS = (
     else _default_origins
 )
 
+import os
+from redis import Redis
+
+REDIS_URL = os.environ.get("REDIS_URL")  # e.g. rediss://:pass@host:port/0
+r = None
+if REDIS_URL:
+    # decode_responses=True -> strings in/out
+    r = Redis.from_url(REDIS_URL, decode_responses=True)
+app.config["r"] = r
+
+
 # Allow only /api/* from these origins (credentials not needed here; flip to True if you set cookies)
 CORS(app, resources={r"/api/*": {"origins": ALLOWED_ORIGINS, "supports_credentials": False}})
 
