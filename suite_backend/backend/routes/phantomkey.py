@@ -1,19 +1,25 @@
 # backend/routes/phantomkey.py
 from flask import Blueprint, request, jsonify, current_app
+from collections import deque
+from datetime import datetime
 import os
 import hmac
 import hashlib
 import time
 import json
 import uuid
+import base64
 import requests
-from collections import deque
-from datetime import datetime
 
+from redis.exceptions import RedisError
 from backend.services.phantomkey import generate_fake_skeletons
 
 phantomkey_bp = Blueprint("phantomkey", __name__)
 
+
+# --------------------------------------------------------------------------------------
+# App-scoped in-memory stores (used initially and as Redis fallback)
+# --------------------------------------------------------------------------------------
 @phantomkey_bp.before_app_request
 def _ensure_tracking_store():
     if not hasattr(current_app, "phantomkey_tracking"):
@@ -22,7 +28,9 @@ def _ensure_tracking_store():
         current_app.phantomkey_events = deque(maxlen=500)
 
 
-# Secret used to sign outbound webhooks
+# --------------------------------------------------------------------------------------
+# Outbound webhook signing
+# --------------------------------------------------------------------------------------
 WEBHOOK_SECRET = os.environ.get("PHANTOMKEY_WEBHOOK_SECRET", "")
 
 def _sign(body: bytes) -> str:
@@ -32,12 +40,37 @@ def _sign(body: bytes) -> str:
     mac = hmac.new(WEBHOOK_SECRET.encode("utf-8"), body, hashlib.sha256).hexdigest()
     return f"sha256={mac}"
 
-from redis.exceptions import RedisError
 
-# -------------------------
-# Redis helpers (persistence)
-# -------------------------
+# --------------------------------------------------------------------------------------
+# Masked/“native-looking” beacon configuration
+# --------------------------------------------------------------------------------------
+# Set these in your environment to enable masked URLs:
+#   MASKED_COLLECTOR_BASE = e.g. "https://collector.redshrew.com" or "https://telemetry.infra.acme.corp"
+#   MASKED_RID_SECRET     = long random string used to HMAC the rid
+MASKED_COLLECTOR_BASE = os.getenv("MASKED_COLLECTOR_BASE", "").rstrip("/")
+MASKED_RID_SECRET = os.getenv("MASKED_RID_SECRET", "")
 
+def _issue_rid(tracking_id: str, ttl_seconds: int | None) -> str:
+    """
+    Create an opaque, URL-safe rid that encodes (tracking_id, iat, exp) with an optional HMAC-SHA256.
+    Format: base64url(json) + "." + base64url(hmac)   (second part omitted if no secret provided)
+    """
+    now = int(time.time())
+    exp = (now + int(ttl_seconds)) if ttl_seconds and ttl_seconds > 0 else None
+    payload = {"tid": tracking_id, "iat": now, "exp": exp}
+    body = json.dumps(payload, separators=(",", ":"), sort_keys=True).encode("utf-8")
+    mac = hmac.new(MASKED_RID_SECRET.encode("utf-8"), body, hashlib.sha256).digest() if MASKED_RID_SECRET else b""
+    p1 = base64.urlsafe_b64encode(body).rstrip(b"=").decode("ascii")
+    if mac:
+        p2 = base64.urlsafe_b64encode(mac).rstrip(b"=").decode("ascii")
+        return f"{p1}.{p2}"
+    return p1
+
+
+# --------------------------------------------------------------------------------------
+# Redis helpers (persistence) with graceful fallback
+# current_app.config["r"] should be set in your app factory using REDIS_URL (Valkey/Redis)
+# --------------------------------------------------------------------------------------
 def _pk_key(tracking_id: str) -> str:
     return f"pk:{tracking_id}"
 
@@ -57,7 +90,7 @@ def _save_pk(tracking_id: str, data: dict, ttl_seconds: int | None):
     """Save a phantom key hash and apply TTL if provided."""
     r = _r()
     if not r:
-        # in-memory fallback
+        # In-memory fallback
         current_app.phantomkey_tracking[tracking_id] = data
         return
     try:
@@ -149,10 +182,9 @@ def _get_events(limit: int = 200) -> list[dict]:
         return list(current_app.phantomkey_events)[-limit:]
 
 
-# -------------------------
+# --------------------------------------------------------------------------------------
 # Routes
-# -------------------------
-
+# --------------------------------------------------------------------------------------
 @phantomkey_bp.route("/phantomkey/start", methods=["POST"])
 def start_phantomkey():
     """
@@ -191,6 +223,13 @@ def start_phantomkey():
         skeleton["canary_url"] = f"/api/phantomkey/track/{tracking_id}"
         skeleton["created_at"] = datetime.utcfromtimestamp(now).strftime("%Y-%m-%dT%H:%M:%S.%fZ")
 
+        # Optional masked/“native” beacon that blends in with customer naming
+        if MASKED_COLLECTOR_BASE:
+            rid = _issue_rid(tracking_id, ttl_seconds)
+            # Example carrier that looks like a tiny pixel or internal metrics hit
+            skeleton["masked_url"] = f"{MASKED_COLLECTOR_BASE}/api/pixel.gif?rid={rid}"
+            # If you prefer header-carried ids, you could also expose suggested headers:
+            # skeleton["masked_headers"] = {"X-Request-Sig": rid}
 
         _save_pk(
             tracking_id,
@@ -310,3 +349,66 @@ def phantom_logs():
         limit = 200
     events = _get_events(limit)
     return jsonify({"events": events, "count": len(events)}), 200
+# ---------- OPTIONAL masked pixel (append to end of file) ----------
+from flask import send_file
+import io
+def _parse_rid(rid: str) -> dict | None:
+    """Validate & decode the opaque rid we issued in _issue_rid()."""
+    if not rid:
+        return None
+    try:
+        if "." in rid and MASKED_RID_SECRET:
+            p1, p2 = rid.split(".", 1)
+            body = base64.urlsafe_b64decode(p1 + "===")
+            mac = base64.urlsafe_b64decode(p2 + "===")
+            expect = hmac.new(MASKED_RID_SECRET.encode("utf-8"), body, hashlib.sha256).digest()
+            if not hmac.compare_digest(mac, expect):
+                return None
+        else:
+            body = base64.urlsafe_b64decode(rid + "===")
+        payload = json.loads(body.decode("utf-8"))
+        # exp check (if present)
+        if payload.get("exp") and int(time.time()) > int(payload["exp"]):
+            return None
+        return payload
+    except Exception:
+        return None
+
+# 1x1 GIF bytes
+_GIF_1PX = (
+    b"GIF89a\x01\x00\x01\x00\x80\x00\x00\x00\x00\x00\xff\xff\xff!"
+    b"\xf9\x04\x01\x00\x00\x00\x00,\x00\x00\x00\x00\x01\x00\x01"
+    b"\x00\x00\x02\x02D\x01\x00;"
+)
+
+@phantomkey_bp.route("/pixel.gif", methods=["GET"])
+def pixel():
+    rid = request.args.get("rid", "")
+    payload = _parse_rid(rid)
+    if not payload:
+        # still serve a pixel to avoid looking suspicious
+        return send_file(io.BytesIO(_GIF_1PX), mimetype="image/gif")
+
+    tid = payload.get("tid")
+    entry = _get_pk(tid) if tid else None
+
+    try:
+        ip = request.headers.get("X-Forwarded-For", request.remote_addr)
+        if isinstance(ip, str) and "," in ip:
+            ip = ip.split(",")[0].strip()
+    except Exception:
+        ip = None
+
+    evt = {
+        "event": "phantomkey.masked_hit",
+        "tracking_id": tid,
+        "skeleton": (entry or {}).get("skeleton", {}),
+        "ts": int(time.time()),
+        "ip": ip,
+        "rid_iat": payload.get("iat"),
+        "rid_exp": payload.get("exp"),
+    }
+    _append_event(evt)
+
+    return send_file(io.BytesIO(_GIF_1PX), mimetype="image/gif")
+# ---------- END masked pixel ----------
