@@ -6,6 +6,7 @@ import { motion } from "framer-motion";
 import ContentCarousel from "@/components/ContentCarousel";
 import Footer from "@/components/Footer";
 import './globals.css';
+import DecryptedText from "@/components/DecryptedText";
 
 
 export default function Home() {
@@ -91,8 +92,17 @@ export default function Home() {
 
       <section className="relative z-40 flex flex-col justify-start items-center px-6 sm:px-12 lg:px-24 text-center min-h-[100vh] pt-[4vh]">
         <h1 className="text-[3.5rem] sm:text-[4.5rem] lg:text-[5.5rem] font-extrabold leading-tight text-white mb-4 drop-shadow-[0_0_30px_rgba(255,0,0,0.6)]">
-          Deception is defense.
-        </h1>
+  <DecryptedText
+    text="Deception is Defense."
+    speed={120}                 // ⬅️ slows down animation (higher = slower)
+    maxIterations={25}          // ⬅️ more scramble cycles before reveal
+    animateOn="view"            // ⬅️ animates once when it comes into view
+    revealDirection="end"    // ⬅️ reveal starts from center
+    className="text-white"      // ⬅️ revealed letters stay white
+    encryptedClassName="text-white/60" // ⬅️ scrambling chars also white, slightly faded
+  />
+</h1>
+
         <p className="text-lg sm:text-xl text-neutral-300 italic max-w-xl mb-7">
           “All warfare is based on deception. — Sun Tzu”
         </p>
@@ -124,7 +134,10 @@ export default function Home() {
         </div>
       </section>
 
+     {/*
       {/* 👇 BRANDS/LOGOS SECTION */}
+
+      {/*
 <section className="w-full flex flex-col items-center justify-center mt-16 mb-4">
   <h2 className="text-neutral-100 text-xl sm:text-2xl mb-7 font-semibold tracking-wide drop-shadow-[0_2px_8px_rgba(255,0,0,0.13)]">
     100+ GROWING TEAMS USE REDSHREW TO DECEIVE AND DEFEND
@@ -224,6 +237,7 @@ export default function Home() {
     </div>
   </div>
 </section>
+*/}
 
   {/* SVG Ombre */}
 <section className="relative flex flex-col items-center justify-center w-full py-24 overflow-x-hidden" style={{ background: "transparent" }}>
