@@ -95,7 +95,7 @@ export default function Home() {
         </h1>
 
         <p className="text-lg sm:text-xl text-neutral-300 italic max-w-xl mb-7">
-          "All warfare is based on deception. — Sun Tzu"
+          &ldquo;All warfare is based on deception. — Sun Tzu&rdquo;
         </p>
         <div className="flex flex-col sm:flex-row gap-4 mb-12">
           <a
@@ -301,7 +301,7 @@ export default function Home() {
                 Attack Tracing
               </h5>
               <h2 className="text-2xl md:text-3xl font-bold text-white mb-5">
-                Don't just observe.<br />Take action.
+                Don&apos;t just observe.<br />Take action.
               </h2>
               <div className="flex flex-col gap-6 mb-8">
                 <div className="rounded-xl bg-[#191418]/90 p-5 text-white font-semibold text-base shadow-lg">
