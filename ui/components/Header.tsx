@@ -38,8 +38,8 @@ export default function Header() {
   const navLinkClasses = "px-4 py-2 rounded-full transition-colors font-semibold hover:bg-red-300 hover:text-black focus:bg-red-400 focus:text-black active:bg-red-400 active:text-black";
 
   return (
-    <header className="w-full px-6 py-0 flex flex-col items-center text-xl relative z-50">
-      <div className="flex justify-center items-center gap-16">
+    <header className="w-full px-6 py-4 flex items-center text-xl relative z-50">
+      <div className="w-full flex items-center justify-between px-4">
         {/* Logo */}
         <Link
           href="/"
