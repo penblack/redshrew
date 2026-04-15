@@ -35,25 +35,25 @@ const API_BASE = process.env.NEXT_PUBLIC_REDSHREW_API_BASE || "https://api.redsh
 // ---- Types ----
 export type GeneratedKey = {
   type?: string;
-  name?: string;
-  provider?: string;
-  tracking_bit: string;
-  canary_url: string;
+  token: string;           // realistic-looking credential shown to the user
+  tracking_id: string;     // internal UUID for operator correlation
   used?: number;
   max_uses?: number;
   expires_at?: number | null;
-  skeleton?: { type?: string };
+  created_at?: string;
 };
 
 export type TriggerEvent = {
   event?: string;
   tracking_id?: string;
+  token_prefix?: string;
   skeleton?: { type?: string };
   used?: number;
   max_uses?: number;
   ts?: number;
   created_ts?: number;
   ip?: string;
+  user_agent?: string;
   country?: string;
   geo?: { country?: string };
 };
@@ -210,7 +210,17 @@ const timeSeries = useMemo(() => {
         throw new Error(`Create failed: ${res.status} ${txt}`);
       }
       const data = await res.json();
-      const generated = Array.isArray(data?.generated) ? (data.generated as GeneratedKey[]) : [];
+      const generated: GeneratedKey[] = Array.isArray(data?.generated)
+        ? data.generated.map((k: GeneratedKey) => ({
+            type:        k.type,
+            token:       k.token,
+            tracking_id: k.tracking_id,
+            used:        k.used ?? 0,
+            max_uses:    k.max_uses,
+            expires_at:  k.expires_at,
+            created_at:  k.created_at,
+          }))
+        : [];
       setKeys((prev) => [...generated, ...prev]);
     } catch (err) {
       const msg = err instanceof Error ? err.message : String(err);
@@ -391,41 +401,32 @@ const timeSeries = useMemo(() => {
             <table className="min-w-full text-sm">
               <thead className="bg-neutral-900/80 text-neutral-300">
                 <tr>
-                  <Th>Skeleton</Th>
+                  <Th>Type</Th>
+                  <Th>Token</Th>
                   <Th>Tracking ID</Th>
-                  <Th>Canary URL</Th>
-                  <Th>Actions</Th>
                 </tr>
               </thead>
               <tbody>
                 {keys.length === 0 && (
                   <tr>
-                    <td colSpan={4} className="p-4 text-center text-neutral-500">No keys yet — create one above.</td>
+                    <td colSpan={3} className="p-4 text-center text-neutral-500">No keys yet — create one above.</td>
                   </tr>
                 )}
                 {keys.map((k, idx) => (
                   <tr key={idx} className="odd:bg-black/30">
-                    <Td>{k?.type || k?.skeleton?.type || labelFromSkeleton(k)}</Td>
-                    <Td className="font-mono text-xs break-all">{k.tracking_bit}</Td>
+                    <Td>{k?.type ?? "—"}</Td>
                     <Td>
                       <div className="flex items-center gap-2">
-                        <code className="text-xs bg-black/50 rounded px-2 py-1 border border-neutral-800">{k.canary_url}</code>
+                        <code className="text-xs bg-black/50 rounded px-2 py-1 border border-neutral-800 font-mono break-all">
+                          {k.token}
+                        </code>
                         <button
-                          onClick={() => copyToClipboard(fullURL(k.canary_url))}
-                          className="text-xs rounded bg-neutral-800 hover:bg-neutral-700 px-2 py-1"
+                          onClick={() => copyToClipboard(k.token)}
+                          className="text-xs rounded bg-neutral-800 hover:bg-neutral-700 px-2 py-1 whitespace-nowrap"
                         >Copy</button>
                       </div>
                     </Td>
-                    <Td>
-                      <div className="flex items-center gap-2">
-                        <a
-                          href={fullURL(k.canary_url)}
-                          target="_blank"
-                          className="text-xs underline text-red-300 hover:text-red-200"
-                          rel="noreferrer"
-                        >Test</a>
-                      </div>
-                    </Td>
+                    <Td className="font-mono text-xs text-neutral-500 break-all">{k.tracking_id}</Td>
                   </tr>
                 ))}
               </tbody>
@@ -444,10 +445,10 @@ const timeSeries = useMemo(() => {
               <thead className="bg-neutral-900/80 text-neutral-300">
                 <tr>
                   <Th>Time</Th>
-                  <Th>Skeleton</Th>
-                  <Th>Tracking ID</Th>
+                  <Th>Type</Th>
+                  <Th>Token (prefix)</Th>
                   <Th>IP</Th>
-                  <Th>Country</Th>
+                  <Th>User-Agent</Th>
                 </tr>
               </thead>
               <tbody>
@@ -460,9 +461,9 @@ const timeSeries = useMemo(() => {
                   <tr key={i} className="odd:bg-black/30">
                     <Td className="whitespace-nowrap">{e.ts ? new Date(e.ts * 1000).toLocaleString() : "—"}</Td>
                     <Td>{e?.skeleton?.type || "—"}</Td>
-                    <Td className="font-mono text-xs break-all">{e.tracking_id || "—"}</Td>
+                    <Td className="font-mono text-xs">{e.token_prefix || "—"}</Td>
                     <Td>{e.ip || "—"}</Td>
-                    <Td>{e.country || e.geo?.country || "—"}</Td>
+                    <Td className="text-xs text-neutral-400 max-w-xs truncate">{e.user_agent || "—"}</Td>
                   </tr>
                 ))}
               </tbody>
@@ -500,22 +501,3 @@ function fmtDuration(sec: number | null | undefined) {
   return `${s}s`;
 }
 
-function isKeyLike(x: unknown): x is { type?: string; name?: string; provider?: string } {
-  return !!x && typeof x === "object";
-}
-function labelFromSkeleton(skel: unknown) {
-  if (!isKeyLike(skel)) return "—";
-  return skel.type ?? skel.name ?? skel.provider ?? "—";
-}
-
-
-function fullURL(path: string) {
-  if (!path) return "";
-  if (path.startsWith("http")) return path;
-  const base = (API_BASE || "").replace(/\/+$/, "");
-  const p = path.startsWith("/") ? path : `/${path}`;
-  if (base.endsWith("/api") && p.startsWith("/api/")) {
-    return base.slice(0, -4) + p; // drop trailing /api from base
-  }
-  return `${base}${p}`;
-}
