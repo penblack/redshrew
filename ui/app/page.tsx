@@ -85,7 +85,7 @@ export default function Home() {
         <h1 className="text-[3.5rem] sm:text-[4.5rem] lg:text-[5.5rem] font-extrabold leading-tight text-white mb-8 drop-shadow-[0_0_30px_rgba(255,0,0,0.6)]">
           <DecryptedText
             text="Deception is Defense."
-            speed={120}
+            speed={80}
             maxIterations={25}
             animateOn="view"
             revealDirection="end"
