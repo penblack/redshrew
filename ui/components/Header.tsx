@@ -35,35 +35,35 @@ export default function Header() {
   const toggleMobileMenu = () => setMobileOpen((prev) => !prev);
 
   // Helper: pill-style nav link classes
-  const navLinkClasses = "px-4 py-2 rounded-full transition-colors font-semibold hover:bg-red-300 hover:text-black focus:bg-red-400 focus:text-black active:bg-red-400 active:text-black";
+  const navLinkClasses = "px-3 py-1.5 rounded-full transition-colors font-semibold hover:bg-red-300 hover:text-black focus:bg-red-400 focus:text-black active:bg-red-400 active:text-black";
 
   return (
-    <header className="w-full px-6 py-4 flex items-center text-xl relative z-50">
-      <div className="w-full flex items-center justify-between px-4">
+    <header className="w-full px-4 py-2 flex items-center relative z-50">
+      <div className="w-full flex items-center justify-between gap-4">
         {/* Logo */}
         <Link
           href="/"
-          className="flex items-center leading-none hover:opacity-90 transition-opacity"
+          className="flex items-center gap-2 leading-none hover:opacity-90 transition-opacity flex-shrink-0"
         >
           <Image
             src="/rat-circle-logo-red-512x512.png"
             alt="RedShrew Logo"
             width={512}
             height={512}
-            className="h-36 w-auto"
+            className="h-10 w-auto"
             priority
           />
-          <span className="text-3xl font-extrabold text-red-700 tracking-widest">
+          <span className="text-xl font-extrabold text-red-700 tracking-widest">
             REDSHREW
           </span>
         </Link>
 
         {/* Nav Links */}
-        <nav className="hidden md:flex items-center gap-4 text-neutral-300 font-semibold ml-12">
+        <nav className="hidden md:flex items-center gap-1 text-neutral-300 font-semibold text-sm flex-1 justify-center">
           {/* PRODUCT DROPDOWN (first button) */}
           <div className="relative group" ref={productRef}>
             <button
-              className={`flex items-center gap-1 px-4 py-2 rounded-full font-semibold focus:outline-none transition-colors ${
+              className={`flex items-center gap-1 px-3 py-1.5 rounded-full font-semibold focus:outline-none transition-colors ${
                 productOpen
                   ? "bg-red-300 text-black"
                   : "hover:bg-red-300 hover:text-black"
@@ -136,7 +136,7 @@ export default function Header() {
         </nav>
 
         {/* Action Buttons */}
-        <div className="hidden md:flex items-center gap-4 ml-12">
+        <div className="hidden md:flex items-center gap-2 flex-shrink-0">
           <Link
             href="/demo"
             className="border border-red-900 text-neutral-200 hover:shrewombre2 hover:text-white transition-colors px-4 py-2 rounded-md text-sm font-medium"
