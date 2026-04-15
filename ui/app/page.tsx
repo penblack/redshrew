@@ -72,7 +72,7 @@ export default function Home() {
       <canvas id="particles" className="absolute inset-0 w-full h-full z-0 pointer-events-none opacity-20" />
 
       {/* 🔻 TOP BANNER CTA */}
-      <div className="w-full text-center z-20 relative mt-3">
+      <div className="w-full text-center z-20 relative mt-6">
         <a
           href="https://discord.gg/redshrew"
           className="inline-block text-sm font-medium shrewombre text-white px-6 py-2 rounded-full shadow-md hover:bg-red-300 hover:text-white transition-colors"
@@ -81,8 +81,8 @@ export default function Home() {
         </a>
       </div>
 
-      <section className="relative z-40 flex flex-col justify-start items-center px-6 sm:px-12 lg:px-24 text-center min-h-[100vh] pt-[4vh]">
-        <h1 className="text-[3.5rem] sm:text-[4.5rem] lg:text-[5.5rem] font-extrabold leading-tight text-white mb-4 drop-shadow-[0_0_30px_rgba(255,0,0,0.6)]">
+      <section className="relative z-40 flex flex-col justify-start items-center px-6 sm:px-12 lg:px-24 text-center min-h-[100vh] pt-16 sm:pt-20 pb-16">
+        <h1 className="text-[3.5rem] sm:text-[4.5rem] lg:text-[5.5rem] font-extrabold leading-tight text-white mb-8 drop-shadow-[0_0_30px_rgba(255,0,0,0.6)]">
           <DecryptedText
             text="Deception is Defense."
             speed={120}
@@ -94,10 +94,10 @@ export default function Home() {
           />
         </h1>
 
-        <p className="text-lg sm:text-xl text-neutral-300 italic max-w-xl mb-7">
+        <p className="text-lg sm:text-xl text-neutral-300 italic max-w-xl mb-10">
           &ldquo;All warfare is based on deception. — Sun Tzu&rdquo;
         </p>
-        <div className="flex flex-col sm:flex-row gap-4 mb-12">
+        <div className="flex flex-col sm:flex-row gap-4 mb-20">
           <a
             href="/demo"
             className="inline-block bg-white text-black px-8 py-4 rounded-md text-lg font-semibold tracking-wide shadow-md transition-colors hover:bg-red-700 hover:text-white"
@@ -114,7 +114,7 @@ export default function Home() {
         </div>
 
         {/* 🖥️ MONITOR UI IMAGE */}
-        <div className="relative w-full max-w-[1150px] px-4 sm:px-12 -mt-25">
+        <div className="relative w-full max-w-[1150px] px-4 sm:px-12">
           <Image
             src="/monitor3.png"
             alt="RedShrew Suite Monitor UI"
@@ -135,7 +135,7 @@ export default function Home() {
       */}
 
       {/* SVG Ombre */}
-      <section className="relative flex flex-col items-center justify-center w-full py-24 overflow-x-hidden" style={{ background: "transparent" }}>
+      <section className="relative flex flex-col items-center justify-center w-full py-36 overflow-x-hidden" style={{ background: "transparent" }}>
         <svg
           className="absolute inset-0 w-full h-full pointer-events-none z-0"
           viewBox="0 0 1920 820"
@@ -202,7 +202,7 @@ export default function Home() {
       </section>
 
       {/* ─── Honeypot Traps Section ─────────────────────────────────────────── */}
-      <section className="relative w-full py-24 flex flex-col items-center bg-black overflow-x-hidden">
+      <section className="relative w-full py-36 flex flex-col items-center bg-black overflow-x-hidden">
         {/* 🔳 CURVED GRID OVERLAY — HONEYPOT */}
         <svg
           className="absolute inset-0 z-0 pointer-events-none"
@@ -338,7 +338,7 @@ export default function Home() {
       </section>
 
       {/* Getting Started Section */}
-      <section className="relative z-10 w-full flex flex-col items-center py-24 bg-gradient-to-b from-black via-neutral-900 to-[#1a0505] overflow-hidden">
+      <section className="relative z-10 w-full flex flex-col items-center py-36 bg-gradient-to-b from-black via-neutral-900 to-[#1a0505] overflow-hidden">
         <div className="relative z-10 max-w-2xl w-full text-center px-4">
           <h2 className="font-extrabold text-3xl sm:text-4xl lg:text-5xl text-white mb-7">
             Deploy in Seconds
@@ -401,7 +401,7 @@ export default function Home() {
       </section>
 
       {/* 📨 Newsletter Signup Section */}
-      <section className="w-full flex flex-col items-center justify-center py-24 bg-black relative overflow-hidden">
+      <section className="w-full flex flex-col items-center justify-center py-36 bg-black relative overflow-hidden">
         <svg
           className="absolute left-[10000%] top-[33%] md:left-[1270px] md:top-[50px] w-[140px] h-[140px] z-0"
           viewBox="0 0 140 140"
@@ -458,7 +458,7 @@ export default function Home() {
 
       <ContentCarousel />
 
-      <section className="relative w-full flex flex-col items-center justify-center pt-0 pb-20 bg-black overflow-hidden">
+      <section className="relative w-full flex flex-col items-center justify-center py-32 bg-black overflow-hidden">
         <div className="relative z-10 flex flex-col items-center max-w-3xl mx-auto text-center px-4">
           <h2 className="text-3xl sm:text-4xl font-extrabold text-white mb-4">
             Outsmart Threats Before They Strike.

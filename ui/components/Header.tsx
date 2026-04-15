@@ -38,7 +38,7 @@ export default function Header() {
   const navLinkClasses = "px-3 py-1.5 rounded-full transition-colors font-semibold hover:bg-red-300 hover:text-black focus:bg-red-400 focus:text-black active:bg-red-400 active:text-black";
 
   return (
-    <header className="w-full px-4 py-2 flex items-center relative z-50">
+    <header className="sticky top-0 z-50 w-full px-6 py-3 flex items-center bg-black/90 backdrop-blur-md border-b border-white/10">
       <div className="w-full flex items-center justify-between gap-4">
         {/* Logo */}
         <Link
