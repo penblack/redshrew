@@ -287,8 +287,25 @@ def _record_auth_hit(token: str, tracking_id: str):
 
 
 # --------------------------------------------------------------------------------------
-# Public-facing deception endpoint
+# Public-facing deception endpoints
+# Both paths return a convincing 401 while silently recording the canary hit.
+# /api/v1/verify  — looks like a standard token-check endpoint
+# /api/phantomkey/track — direct hit (attacker may probe this path too)
 # --------------------------------------------------------------------------------------
+def _handle_canary_request():
+    """Shared logic for all deception endpoints."""
+    token = _extract_token()
+    if token:
+        tracking_id = _lookup_token(token)
+        if tracking_id:
+            _record_auth_hit(token, tracking_id)
+    return jsonify({
+        "error":      "Unauthorized",
+        "message":    "Invalid or expired API key.",
+        "request_id": str(uuid.uuid4()),
+    }), 401
+
+
 @phantomkey_bp.route("/v1/verify", methods=["GET", "POST", "HEAD"])
 def verify_token():
     """
@@ -308,19 +325,16 @@ def verify_token():
       2. HTTP canary (this endpoint): the auth attempt is logged with IP, User-Agent,
          and request headers the moment the 401 is requested.
     """
-    token = _extract_token()
-    if token:
-        tracking_id = _lookup_token(token)
-        if tracking_id:
-            _record_auth_hit(token, tracking_id)
+    return _handle_canary_request()
 
-    # Always 401 — response is identical whether the token was recognised or not.
-    # Include a request_id so it looks like a real API response.
-    return jsonify({
-        "error":      "Unauthorized",
-        "message":    "Invalid or expired API key.",
-        "request_id": str(uuid.uuid4()),
-    }), 401
+
+@phantomkey_bp.route("/phantomkey/track", methods=["GET", "POST", "HEAD"])
+def track_canary():
+    """
+    Catch direct hits to the track path without a tracking_id.
+    Returns the same 401 as /v1/verify and logs the token if known.
+    """
+    return _handle_canary_request()
 
 
 # --------------------------------------------------------------------------------------
