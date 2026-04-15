@@ -1,7 +1,9 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { ShieldAlert, TerminalSquare, Eye, Cloud, Settings } from 'lucide-react';
+import { ShieldAlert, TerminalSquare, Eye, Cloud, Settings, X, ArrowRight, FlaskConical } from 'lucide-react';
+import { AnimatePresence, motion } from 'framer-motion';
+import Link from 'next/link';
 
 type GeneratedSkeleton = {
   type: string;
@@ -42,6 +44,7 @@ type SystemStatus = {
 } | null;
 
 export default function CommandCenter() {
+  const [modalOpen, setModalOpen] = useState(false);
   const [activeTab, setActiveTab] = useState<'dashboard' | 'tools' | 'events' | 'cloud' | 'settings'>('dashboard');
   const [phantomStatus, setPhantomStatus] = useState<PhantomStatus>(null);
   const [honeypitchStatus, setHoneyPitchStatus] = useState<HoneyPitchStatus>(null);
@@ -86,6 +89,11 @@ const handleHoneyPitchStart = async () => {
   }
 };
 
+  // Show the "in development" modal on first load
+  useEffect(() => {
+    setModalOpen(true);
+  }, []);
+
 useEffect(() => {
   if (activeTab === 'dashboard') {
     fetch('/api/status')
@@ -116,6 +124,93 @@ useEffect(() => {
 }, [activeTab]);
 
   return (
+    <>
+      {/* ── In-development modal ────────────────────────────────── */}
+      <AnimatePresence>
+        {modalOpen && (
+          <>
+            {/* Backdrop */}
+            <motion.div
+              key="backdrop"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.2 }}
+              className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm"
+              onClick={() => setModalOpen(false)}
+            />
+
+            {/* Card */}
+            <motion.div
+              key="modal"
+              initial={{ opacity: 0, scale: 0.95, y: 16 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 16 }}
+              transition={{ duration: 0.25, ease: 'easeOut' }}
+              className="fixed inset-0 z-50 flex items-center justify-center p-4 pointer-events-none"
+            >
+              <div className="pointer-events-auto w-full max-w-md bg-neutral-950 border border-white/10 rounded-2xl shadow-2xl overflow-hidden">
+
+                {/* Red accent bar */}
+                <div className="h-1 w-full bg-gradient-to-r from-red-700 via-red-500 to-red-700" />
+
+                <div className="p-7">
+                  {/* Header row */}
+                  <div className="flex items-start justify-between gap-4 mb-5">
+                    <div className="flex items-center gap-3">
+                      <div className="flex-shrink-0 w-10 h-10 rounded-lg bg-red-900/40 border border-red-700/40 flex items-center justify-center">
+                        <FlaskConical size={20} className="text-red-400" />
+                      </div>
+                      <div>
+                        <div className="flex items-center gap-2 mb-0.5">
+                          <h2 className="text-base font-bold text-white">The Suite is in Development</h2>
+                        </div>
+                        <span className="inline-flex items-center gap-1 text-[11px] font-semibold uppercase tracking-wider text-amber-400 bg-amber-400/10 border border-amber-400/20 rounded-full px-2 py-0.5">
+                          Early Access
+                        </span>
+                      </div>
+                    </div>
+                    <button
+                      onClick={() => setModalOpen(false)}
+                      className="flex-shrink-0 text-neutral-500 hover:text-neutral-200 transition-colors mt-0.5"
+                      aria-label="Dismiss"
+                    >
+                      <X size={18} />
+                    </button>
+                  </div>
+
+                  {/* Body */}
+                  <p className="text-sm text-neutral-300 leading-relaxed mb-6">
+                    We&apos;re actively building the full RedShrew Suite — HoneyPitch, Observer, Cloud Sync, and more are on the way.
+                  </p>
+                  <p className="text-sm text-neutral-400 leading-relaxed mb-7">
+                    In the meantime, <span className="text-white font-medium">PhantomKey</span> is live and ready to use. Deploy realistic decoy API keys and get alerted the moment an attacker uses one.
+                  </p>
+
+                  {/* CTAs */}
+                  <div className="flex flex-col sm:flex-row gap-3">
+                    <Link
+                      href="/dashboard"
+                      onClick={() => setModalOpen(false)}
+                      className="flex items-center justify-center gap-2 flex-1 px-4 py-2.5 rounded-md text-sm font-semibold text-white bg-red-600 hover:bg-red-500 transition-colors"
+                    >
+                      View PhantomKey MVP
+                      <ArrowRight size={15} />
+                    </Link>
+                    <button
+                      onClick={() => setModalOpen(false)}
+                      className="flex-1 px-4 py-2.5 rounded-md text-sm font-medium text-neutral-400 hover:text-neutral-200 border border-white/10 hover:border-white/20 transition-colors"
+                    >
+                      Browse Anyway
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
+
     <main className="min-h-screen bg-black text-white font-sans p-6">
       {/* Header */}
       <header className="flex items-center justify-between border-b border-red-600 pb-4 mb-6">
@@ -223,6 +318,7 @@ useEffect(() => {
         {activeTab === 'settings' && <div>⚙️ Local Preferences and Config File Editor</div>}
       </section>
     </main>
+  </>
   );
 }
 
