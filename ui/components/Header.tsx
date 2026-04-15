@@ -47,10 +47,10 @@ export default function Header() {
             alt="RedShrew Logo"
             width={512}
             height={512}
-            className="h-9 w-auto"
+            className="h-12 w-auto"
             priority
           />
-          <span className="text-lg font-extrabold text-red-600 tracking-widest leading-none select-none">
+          <span className="text-xl font-extrabold text-red-600 tracking-widest leading-none select-none">
             REDSHREW
           </span>
         </Link>
