@@ -4,191 +4,240 @@ import Link from "next/link";
 import Image from "next/image";
 import { useState, useRef, useEffect } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { Menu, X } from "lucide-react";
+import { Menu, X, ChevronDown } from "lucide-react";
 
 export default function Header() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [productOpen, setProductOpen] = useState(false);
-
   const productRef = useRef<HTMLDivElement>(null);
 
-  // Click outside handler for dropdown
+  // Close product dropdown when clicking outside
   useEffect(() => {
-    function handleClickOutside(event: MouseEvent) {
-      if (
-        productRef.current &&
-        !productRef.current.contains(event.target as Node)
-      ) {
+    function onClickOutside(e: MouseEvent) {
+      if (productRef.current && !productRef.current.contains(e.target as Node)) {
         setProductOpen(false);
       }
     }
-    if (productOpen) {
-      document.addEventListener("mousedown", handleClickOutside);
-    } else {
-      document.removeEventListener("mousedown", handleClickOutside);
-    }
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, [productOpen]);
+    document.addEventListener("mousedown", onClickOutside);
+    return () => document.removeEventListener("mousedown", onClickOutside);
+  }, []);
 
-  const toggleMobileMenu = () => setMobileOpen((prev) => !prev);
+  const toggleMobileMenu = () => setMobileOpen((v) => !v);
 
-  // Helper: pill-style nav link classes
-  const navLinkClasses = "px-3 py-1.5 rounded-full transition-colors font-semibold hover:bg-red-300 hover:text-black focus:bg-red-400 focus:text-black active:bg-red-400 active:text-black";
+  // Plain text nav link — color shift on hover, no pill background (matches Sentry proportions)
+  const navLink =
+    "text-sm text-neutral-300 hover:text-white transition-colors px-3 py-1.5 whitespace-nowrap";
+
+  // Dropdown menu item
+  const dropItem =
+    "block px-3 py-1.5 rounded-md text-sm text-neutral-300 hover:text-white hover:bg-white/[0.06] transition-colors whitespace-nowrap";
 
   return (
-    <header className="sticky top-0 z-50 w-full px-6 py-3 flex items-center bg-black/90 backdrop-blur-md border-b border-white/10">
-      <div className="w-full flex items-center justify-between gap-4">
-        {/* Logo */}
+    <header className="sticky top-0 z-50 w-full bg-black/75 backdrop-blur-md border-b border-white/[0.08]">
+      {/* Single constrained row — mirrors Sentry's max-w-7xl centered bar */}
+      <div className="mx-auto max-w-7xl px-6 h-16 flex items-center justify-between gap-8">
+
+        {/* ── LEFT: Logo + Brand ──────────────────────────────────── */}
         <Link
           href="/"
-          className="flex items-center gap-2 leading-none hover:opacity-90 transition-opacity flex-shrink-0"
+          className="flex items-center gap-2.5 flex-shrink-0 hover:opacity-90 transition-opacity"
         >
           <Image
             src="/rat-circle-logo-red-512x512.png"
             alt="RedShrew Logo"
             width={512}
             height={512}
-            className="h-10 w-auto"
+            className="h-9 w-auto"
             priority
           />
-          <span className="text-xl font-extrabold text-red-700 tracking-widest">
+          <span className="text-lg font-extrabold text-red-600 tracking-widest leading-none select-none">
             REDSHREW
           </span>
         </Link>
 
-        {/* Nav Links */}
-        <nav className="hidden md:flex items-center gap-1 text-neutral-300 font-semibold text-sm flex-1 justify-center">
-          {/* PRODUCT DROPDOWN (first button) */}
-          <div className="relative group" ref={productRef}>
+        {/* ── CENTER: Primary nav ─────────────────────────────────── */}
+        <nav className="hidden md:flex items-center gap-0.5 flex-1 justify-center" aria-label="Primary">
+
+          {/* Product — mega-menu dropdown */}
+          <div className="relative" ref={productRef}>
             <button
-              className={`flex items-center gap-1 px-3 py-1.5 rounded-full font-semibold focus:outline-none transition-colors ${
-                productOpen
-                  ? "bg-red-300 text-black"
-                  : "hover:bg-red-300 hover:text-black"
-              }`}
               onClick={() => setProductOpen((v) => !v)}
-              tabIndex={0}
               aria-haspopup="true"
               aria-expanded={productOpen}
+              className={`flex items-center gap-1 ${navLink} ${productOpen ? "text-white" : ""}`}
             >
               Product
-              <svg width="16" height="16" viewBox="0 0 20 20" fill="currentColor" className="ml-1">
-                <path fillRule="evenodd" d="M10 12a1 1 0 01-.707-.293l-4-4a1 1 0 111.414-1.414L10 9.586l3.293-3.293a1 1 0 111.414 1.414l-4 4A1 1 0 0110 12z" clipRule="evenodd" />
-              </svg>
+              <ChevronDown
+                size={14}
+                className={`mt-px flex-shrink-0 transition-transform duration-200 ${productOpen ? "rotate-180" : ""}`}
+              />
             </button>
+
+            {/* Mega-menu panel */}
             <div
-              className={`absolute left-1/2 -translate-x-1/2 mt-4 bg-black border border-red-800/40 rounded-2xl shadow-2xl px-10 py-8 z-50 transition-all duration-200 ${
-                productOpen ? "block" : "hidden"
-              }`}
-              style={{ minWidth: "1050px" }}
+              className={`absolute left-1/2 -translate-x-1/2 top-full mt-2.5 w-[700px]
+                bg-neutral-900/95 backdrop-blur-md border border-white/10 rounded-xl shadow-2xl
+                transition-all duration-200 origin-top
+                ${productOpen
+                  ? "opacity-100 scale-y-100 translate-y-0 pointer-events-auto"
+                  : "opacity-0 scale-y-95 -translate-y-1 pointer-events-none"
+                }`}
             >
-              <div className="grid grid-cols-3 gap-12 text-left items-start">
+              <div className="grid grid-cols-3 p-5 gap-5">
                 {/* Suite */}
                 <div>
-                  <h4 className="font-bold text-lg text-red-400 mb-3 pl-1">Suite</h4>
-                  <ul className="space-y-2">
-                    <li><Link href="/phantomkey" className={navLinkClasses}>PhantomKey</Link></li>
-                    <li><Link href="/honeypitch" className={navLinkClasses}>HoneyPitch</Link></li>
-                    <li><Link href="/observer" className={navLinkClasses}>Observer</Link></li>
-                    <li><Link href="/API" className={navLinkClasses}>API</Link></li>
-                    <li><Link href="/Cloud" className={navLinkClasses}>Cloud</Link></li>
-                    <li><Link href="/suite" className={navLinkClasses}>See All Tools</Link></li>
+                  <p className="text-[11px] font-semibold text-red-400 uppercase tracking-wider mb-2 px-3">
+                    Suite
+                  </p>
+                  <ul className="space-y-0.5">
+                    <li><Link href="/phantomkey" className={dropItem}>PhantomKey</Link></li>
+                    <li><Link href="/honeypitch" className={dropItem}>HoneyPitch</Link></li>
+                    <li><Link href="/observer"   className={dropItem}>Observer</Link></li>
+                    <li><Link href="/API"        className={dropItem}>API</Link></li>
+                    <li><Link href="/Cloud"      className={dropItem}>Cloud</Link></li>
+                    <li>
+                      <Link
+                        href="/suite"
+                        className="block px-3 py-1.5 rounded-md text-sm text-red-400 hover:text-red-300 hover:bg-white/[0.06] transition-colors"
+                      >
+                        See All Tools →
+                      </Link>
+                    </li>
                   </ul>
                 </div>
-                {/* Ecosystem */}
-                <div>
-                  <h4 className="font-bold text-lg text-red-400 mb-3 pl-1">Ecosystems and integrations</h4>
-                  <ul className="space-y-2">
-                    <li><span className="font-medium text-neutral-200"></span></li>
-                    <li><span className={navLinkClasses}>AWS, Azure</span></li>
-                    <li><span className={navLinkClasses}>Splunk</span></li>
-                    <li><span className={navLinkClasses}>QRadar</span></li>
-                    <li><span className={navLinkClasses}>Windows</span></li>
-                    <li><span className={navLinkClasses}>MAC OS</span></li>
-                    <li><span className={navLinkClasses}>Linux</span></li>
-                    <li><span className={navLinkClasses}>Kubernetes, Docker</span></li>
-                    <li><span className={navLinkClasses}>SIEM</span></li>
-                    <li><span className={navLinkClasses}>SOC Tools</span></li>
+
+                {/* Ecosystems — vertical divider via border-l */}
+                <div className="border-l border-white/10 pl-5">
+                  <p className="text-[11px] font-semibold text-red-400 uppercase tracking-wider mb-2 px-3">
+                    Ecosystems
+                  </p>
+                  <ul className="space-y-0.5">
+                    <li><span className={dropItem}>AWS, Azure</span></li>
+                    <li><span className={dropItem}>Splunk</span></li>
+                    <li><span className={dropItem}>QRadar</span></li>
+                    <li><span className={dropItem}>Windows</span></li>
+                    <li><span className={dropItem}>Linux / macOS</span></li>
+                    <li><span className={dropItem}>Kubernetes, Docker</span></li>
+                    <li><span className={dropItem}>SIEM / SOC Tools</span></li>
                   </ul>
                 </div>
-                {/* Why RedShrew */}
-                <div>
-                  <h4 className="font-bold text-lg text-red-400 mb-3 pl-1">Why RedShrew</h4>
-                  <ul className="space-y-2">
-                    <li><span className={navLinkClasses}>Deception-Driven Security</span></li>
-                    <li><span className={navLinkClasses}>Rapid Threat Detection</span></li>
-                    <li><span className={navLinkClasses}>Zero False Positives</span></li>
-                    <li><span className={navLinkClasses}>Easy Deployment</span></li>
-                    <li><span className={navLinkClasses}>No Impact on Users</span></li>
-                    <li><span className={navLinkClasses}>Compliance Ready</span></li>
+
+                {/* Why RedShrew — vertical divider */}
+                <div className="border-l border-white/10 pl-5">
+                  <p className="text-[11px] font-semibold text-red-400 uppercase tracking-wider mb-2 px-3">
+                    Why RedShrew
+                  </p>
+                  <ul className="space-y-0.5">
+                    <li><span className={dropItem}>Deception-Driven Security</span></li>
+                    <li><span className={dropItem}>Rapid Threat Detection</span></li>
+                    <li><span className={dropItem}>Zero False Positives</span></li>
+                    <li><span className={dropItem}>Easy Deployment</span></li>
+                    <li><span className={dropItem}>No Impact on Users</span></li>
+                    <li><span className={dropItem}>Compliance Ready</span></li>
                   </ul>
                 </div>
               </div>
             </div>
           </div>
-          <Link href="/solutions" className={navLinkClasses}>Solutions</Link>
-          <Link href="/playbook" className={navLinkClasses}>Playbook</Link>
-          <Link href="/suite" className={navLinkClasses}>Suite</Link>
-          <Link href="/blog" className={navLinkClasses}>Blog</Link>
-          <Link href="/contact" className={navLinkClasses}>Contact</Link>
+
+          <Link href="/solutions" className={navLink}>Solutions</Link>
+          <Link href="/playbook"  className={navLink}>Playbook</Link>
+          <Link href="/suite"     className={navLink}>Suite</Link>
+          <Link href="/blog"      className={navLink}>Blog</Link>
+          <Link href="/contact"   className={navLink}>Contact</Link>
         </nav>
 
-        {/* Action Buttons */}
-        <div className="hidden md:flex items-center gap-2 flex-shrink-0">
+        {/* ── RIGHT: Auth buttons ─────────────────────────────────── */}
+        {/* Outlined (ghost) + Filled — visually distinct, matches Sentry's "Sign in / Get started" */}
+        <div className="hidden md:flex items-center gap-3 flex-shrink-0">
           <Link
             href="/demo"
-            className="border border-red-900 text-neutral-200 hover:shrewombre2 hover:text-white transition-colors px-4 py-2 rounded-md text-sm font-medium"
+            className="px-4 py-2 rounded-md text-sm font-medium text-neutral-200
+              border border-neutral-600 hover:border-neutral-400 hover:text-white
+              transition-colors whitespace-nowrap"
           >
             Get a Demo
           </Link>
           <Link
             href="/get-started"
-            className="bg-neutral-300 text-black hover:shrewombre hover:text-white transition-colors px-4 py-2 rounded-md text-sm font-medium"
+            className="px-4 py-2 rounded-md text-sm font-semibold text-white
+              bg-red-600 hover:bg-red-500 transition-colors whitespace-nowrap"
           >
             Get Started
           </Link>
         </div>
+
+        {/* ── Hamburger (mobile only) ─────────────────────────────── */}
+        <button
+          className="md:hidden text-neutral-300 hover:text-white transition-colors"
+          onClick={toggleMobileMenu}
+          aria-label="Toggle menu"
+        >
+          {mobileOpen ? <X size={22} /> : <Menu size={22} />}
+        </button>
       </div>
 
-      {/* Hamburger Button */}
-      <button className="md:hidden text-red-500 z-50 absolute top-4 right-6" onClick={toggleMobileMenu} aria-label="Toggle Menu">
-        {mobileOpen ? <X size={32} /> : <Menu size={32} />}
-      </button>
-
-      {/* Dark Overlay */}
+      {/* ── Mobile overlay ──────────────────────────────────────────── */}
       <AnimatePresence>
         {mobileOpen && (
           <motion.div
             initial={{ opacity: 0 }}
-            animate={{ opacity: 0.5 }}
+            animate={{ opacity: 0.6 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black backdrop-blur-sm z-40"
+            className="fixed inset-0 bg-black z-40"
             onClick={toggleMobileMenu}
           />
         )}
       </AnimatePresence>
 
-      {/* Mobile Nav Panel */}
+      {/* ── Mobile slide-in panel ───────────────────────────────────── */}
       <AnimatePresence>
         {mobileOpen && (
           <motion.nav
             initial={{ x: "100%" }}
             animate={{ x: 0 }}
             exit={{ x: "100%" }}
-            transition={{ duration: 0.3 }}
-            className="fixed top-0 right-0 w-3/4 h-full bg-black text-red-500 flex flex-col items-start p-6 gap-6 z-50 shadow-lg md:hidden"
+            transition={{ duration: 0.25, ease: "easeOut" }}
+            className="fixed top-0 right-0 h-full w-4/5 max-w-sm
+              bg-neutral-950 border-l border-white/10
+              flex flex-col p-6 gap-4 z-50 overflow-y-auto"
           >
-            <Link href="/product" onClick={toggleMobileMenu} className="text-lg">Product</Link>
-            <Link href="/solutions" onClick={toggleMobileMenu} className="text-lg">Solutions</Link>
-            <Link href="/playbook" onClick={toggleMobileMenu} className="text-lg">Playbook</Link>
-            <Link href="/suite" onClick={toggleMobileMenu} className="text-lg">Suite</Link>
-            <Link href="/blog" onClick={toggleMobileMenu} className="text-lg">Blog</Link>
-            <Link href="/contact" onClick={toggleMobileMenu} className="text-lg">Contact</Link>
-            <hr className="w-full border-neutral-700 my-2" />
-            <Link href="/demo" onClick={toggleMobileMenu} className="text-lg">Get a Demo</Link>
-            <Link href="/get-started" onClick={toggleMobileMenu} className="text-lg">Get Started</Link>
+            <div className="flex items-center justify-between mb-1">
+              <span className="text-xs font-semibold text-neutral-500 uppercase tracking-wider">
+                Menu
+              </span>
+              <button
+                onClick={toggleMobileMenu}
+                className="text-neutral-400 hover:text-white transition-colors"
+              >
+                <X size={20} />
+              </button>
+            </div>
+
+            <Link href="/product"    onClick={toggleMobileMenu} className="text-base text-neutral-200 hover:text-white transition-colors">Product</Link>
+            <Link href="/solutions"  onClick={toggleMobileMenu} className="text-base text-neutral-200 hover:text-white transition-colors">Solutions</Link>
+            <Link href="/playbook"   onClick={toggleMobileMenu} className="text-base text-neutral-200 hover:text-white transition-colors">Playbook</Link>
+            <Link href="/suite"      onClick={toggleMobileMenu} className="text-base text-neutral-200 hover:text-white transition-colors">Suite</Link>
+            <Link href="/blog"       onClick={toggleMobileMenu} className="text-base text-neutral-200 hover:text-white transition-colors">Blog</Link>
+            <Link href="/contact"    onClick={toggleMobileMenu} className="text-base text-neutral-200 hover:text-white transition-colors">Contact</Link>
+
+            <hr className="border-white/10 my-1" />
+
+            <Link
+              href="/demo"
+              onClick={toggleMobileMenu}
+              className="text-base text-neutral-200 hover:text-white transition-colors"
+            >
+              Get a Demo
+            </Link>
+            <Link
+              href="/get-started"
+              onClick={toggleMobileMenu}
+              className="w-full text-center px-4 py-2.5 rounded-md text-sm font-semibold
+                text-white bg-red-600 hover:bg-red-500 transition-colors"
+            >
+              Get Started
+            </Link>
           </motion.nav>
         )}
       </AnimatePresence>
